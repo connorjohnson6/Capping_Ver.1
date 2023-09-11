@@ -1,0 +1,24 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="styles/navbar.css">
+
+<div class="topnav" id="myTopnav">
+  <a class="active" href="/"><i class="fa fa-fw fa-home"></i> Home</a>
+  <a href="/blog"><i class="fa fa-fw fa-camera"></i> Blog</a>
+  <a href="/about"><i class="fa fa-fw fa-black-tie"></i> About Me</a>
+  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+    <i class="fa fa-bars"></i>
+  </a>
+</div>
+
+<script>
+  function myFunction() {
+      var x = document.getElementById("myTopnav");
+      if (x.className === "topnav") {
+      x.className += " responsive";
+      } else {
+      x.className = "topnav";
+      }
+  }
+  </script>
+
+
