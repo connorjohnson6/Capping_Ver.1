@@ -1,0 +1,22 @@
+#preloader {
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    background: url(/image/recycle_loading.gif) no-repeat center center;
+    background-color: rgba(255, 255, 255, 0.95);  /* Slightly transparent white */
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 2000;  /*Higher z-index than 1000 so it covers navbar */
+    transition: opacity 0.5s ease-in-out;
+    background-size: 25vmin;  /* Use viewport units */
+
+
+}
+
+@media screen and (max-width: 600px) {
+    .loading-text {
+        font-size: 5vmin;  /* Adjust font size based on viewport size */
+    }
+}
