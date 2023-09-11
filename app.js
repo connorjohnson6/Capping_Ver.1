@@ -11,7 +11,7 @@ const port = 3000
 // Set Templating Engine
 app.set('view engine', 'ejs')
 
-app.use(express.static("public") );
+app.use(express.static('public') );
 
 //Navigation
 app.get('', (req, res) =>{
@@ -26,6 +26,11 @@ app.get('/blog', (req, res) =>{
 //about me tab
 app.get('/about', (req, res) =>{
     res.render('about')
+})
+
+//about me tab
+app.get('/login', (req, res) =>{
+    res.render('login')
 })
 
 //404 page
