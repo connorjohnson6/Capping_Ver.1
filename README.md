@@ -13,7 +13,7 @@ To run the application. start a new terminal and enter:
 Will be hosting on port 3000
 
 
-npm install passport passport-google-oauth20
+npm install passport@0.5 passport-google-oauth20
 npm install mongoose
 npm install mongodb
 npm install cookie-session
