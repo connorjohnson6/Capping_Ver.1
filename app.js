@@ -8,15 +8,19 @@ const keys = require('./config/keys');
 const app = express();
 const port = 3000
 
-
+mongoose.set('strictQuery', true);
 
 // Set Templating Engine
 app.set('view engine', 'ejs')
 
 //connect to mongodb
-mongoose.connect(keys.mongodb.dbURI, () =>{
-    console
-});
+mongoose.connect(keys.mongodb.dbURI)
+    .then(() => {
+        console.log('connected to mongodb');
+    })
+    .catch(err => {
+        console.error('Error connecting to mongodb:', err);
+    });
 
 
 app.use(express.static('public') );
