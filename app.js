@@ -1,6 +1,8 @@
 const express = require('express');
-
-
+const authRoutes = require('./routes/auth-routes');
+const passportSetup = require('./config/passport-setup');
+const mongoose = require('mongoose');
+const keys = require('./config/keys');
 
 
 const app = express();
@@ -11,7 +13,17 @@ const port = 3000
 // Set Templating Engine
 app.set('view engine', 'ejs')
 
+//connect to mongodb
+mongoose.connect(keys.mongodb.dbURI, () =>{
+    console
+});
+
+
 app.use(express.static('public') );
+
+//set up routes
+app.use('/auth', authRoutes);
+
 
 //Navigation
 app.get('', (req, res) =>{
@@ -40,4 +52,3 @@ app.use(function(req, res, next){
 
 //Listeing to Port 3000
 app.listen(port, ()=> console.info(`App listening on port ${port}`))
-
