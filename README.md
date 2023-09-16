@@ -17,4 +17,6 @@ npm install passport@0.5 passport-google-oauth20
 npm install mongoose
 npm install mongodb
 npm install cookie-session
+npm install express-flash express-session
+
 
