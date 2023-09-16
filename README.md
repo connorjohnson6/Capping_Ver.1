@@ -18,5 +18,6 @@ npm install mongoose
 npm install mongodb
 npm install cookie-session
 npm install express-flash express-session
+npm install body-parser
 
 
