@@ -54,6 +54,10 @@ app.get('', (req, res) => {
     res.render('index')
 });
 
+//blog tab
+app.get('/goals', (req, res) =>{
+    res.render('goals')
+})
 
 //blog tab
 app.get('/blog', (req, res) =>{
