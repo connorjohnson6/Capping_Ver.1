@@ -4,30 +4,47 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/profile.css">
     <title>Profile</title>
 </head>
 <body>
+    <header>
+        <h1>Welcome to your page <%= user.username %> </h1>
+    </header>
 
-    <!-- TODO: make a new navabr that only goes with when the users are logged in -->
-    <body>
-        <header>
-            <h1>Welcome to your page <%= user.username %> </h1>
-        </header>
+    <!-- TODO: make a new navbar that only goes with when the users are logged in -->
 
-        <!--Preferably we should keep this on the new navbar-->
-        <main>
-            <!--Onc eth euser hits the log out they need to sign back in.-->
-            <a href="/auth/logout">Logout</a>
-        </main>
+    <nav>
+        <!-- Navbar placeholder -->
+    </nav>
 
-        <main>
-            
-        </main>
-        
-    
-    
-    
-    </body>
-    
+    <main>
+        <!-- Once the user hits the log out they need to sign back in.-->
+        <a href="/auth/logout" class="logout-btn">Logout</a>
+
+        <form method="POST" action="/profile-upload-single" enctype="multipart/form-data" class="upload-form">
+            <div>
+                <label>Upload profile picture</label>
+                <input type="file" name="profile-file" required/>
+            </div>
+            <div>
+                <input type="submit" value="Upload" class="upload-btn" />
+            </div>
+        </form>
+
+        <hr>
+
+        <!-- Statistics section -->
+        <section class="statistics">
+            <h2>Your Carbon Footprint Statistics</h2>
+            <!-- Example stats. You can fetch these from the backend and display here -->
+            <div class="stat">
+                <span>BlahBLahFiller</span> <span>250 kg</span>
+            </div>
+            <div class="stat">
+                <span>BlahBlahTreesPlantedOrSomething</span> <span>50</span>
+            </div>
+        </section>
+    </main>
 </body>
 </html>
