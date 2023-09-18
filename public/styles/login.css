@@ -35,6 +35,11 @@ video{
     color: #fff;
     border-radius: 12px;
     padding: 30px 40px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 0.5s;
 }
  
 .wrapper h1{
@@ -118,6 +123,10 @@ video{
     margin: 20px 0 15px;
   
 }
+
+.wrapper:nth-of-type(2) {
+    left: 150%;
+}
   
 .register-link p a{
     color: #fff;
@@ -128,3 +137,59 @@ video{
 .register-link p a:hover{
     text-decoration: underline;
 }
+
+#loginForm {
+    left: 50%;
+}
+
+#registerForm {
+    left: 150%;
+}
+
+.google-btn {
+    display: flex;
+    align-items: center;
+    background-color: #FFFFFF;
+    color: #5F6368;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #DADCE0;
+    border-radius: 4px;
+    padding: 10px 12px;
+    width: 100%;
+    max-width: 240px;
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(66,133,244,0.3);
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.google-btn:hover {
+    background-color: #F7F8F8;
+    box-shadow: 0 1px 3px rgba(66,133,244,0.4), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.google-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 12px;
+}
+
+.google-icon img {
+    width: 20px;
+    height: 20px;
+}
+
+.professional-popup {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+    background-color: #f4f4f4;  /* Neutral grey background */
+    border: 1px solid #d4d4d4;  /* Subtle border */
+    border-radius: 5px;  /* Slight rounding of corners */
+    padding: 10px 15px;  /* Padding around the text */
+    font-size: 14px;  /* Font size */
+    margin-top: 10px;  /* Space from the email input */
+    color: #555;  /* Subdued text color */
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);  /* A slight shadow to give depth */
+}
+

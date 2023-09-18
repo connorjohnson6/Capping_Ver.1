@@ -11,19 +11,21 @@
     <body>
         <%- include ("./partials/header"); %>
 
+        
+
 
         <video src="image/waterfall_background.mp4" muted loop autoplay></video>
 
 
-        <div class="wrapper">
-            <form action="">
+        <div class="wrapper" id="loginForm">
+            <form action="/auth/login" method="POST">
             <h1>Login</h1>
             <div class="input-box">
-                <input type="text" placeholder="Username" required>
+                <input type="text" name="username" placeholder="Email" required>
                 <i class='bx bxs-user'></i>
             </div>
             <div class="input-box">
-                <input type="password" placeholder="Password" required>
+                <input type="password" name="password" placeholder="Password" required>
                 <i class='bx bxs-lock-alt' ></i>
             </div>
             <div class="remember-forgot">
@@ -37,13 +39,135 @@
             </form>
 
             <main>
-                <a class="google-btn" href="/auth/google">Google</a>
+                <a class="google-btn" href="/auth/google">
+                    <span class="google-icon">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google logo" width="20">
+                    </span>
+                    Sign in with Google
+                </a>            
+            </main>
+        </div>
+
+        <div class="wrapper" id="registerForm">
+            <form action="/auth/register" method="POST">
+            <h1>Register</h1>
+            <div class="input-box">
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <i class='bx bxs-user'></i>
+            </div>
+            <div class="input-box">
+                <input type="text" id="username" name="username" placeholder="Username" required>
+                <span id="username-error" class="professional-popup"></span>
+                <i class='bx bxs-user'></i>
+            </div>
+            <div class="input-box">
+                <input type="password" name="password" placeholder="Password" required>
+                <i class='bx bxs-lock-alt' ></i>
+            </div>
+            <button type="submit" id="registerBtn" class="btn">Create account</button>
+            <div class="register-link">
+                <p>Have an account? <a href="#">Login</a></p>
+            </div>
+            </form>
+
+            <main>
+                <a class="google-btn" href="/auth/google">
+                    <span class="google-icon">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google logo" width="20">
+                    </span>
+                    Register with Google
+                </a>            
             </main>
         </div>
 
 
 
 
+    
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const loginWrapper = document.getElementById('loginForm');
+                const registerWrapper = document.getElementById('registerForm');
+        
+                const registerLink = document.querySelector('.register-link a');
+                const loginLink = registerWrapper.querySelector('.register-link a');
+        
+                registerLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    loginWrapper.style.left = '-150%';        
+                    registerWrapper.style.left = '50%';       
+                });
+        
+                loginLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    registerWrapper.style.left = '150%';      
+                    loginWrapper.style.left = '50%';          
+                });
+            });
+
+            const emailInput = document.querySelector('#email');
+            const registerBtn = document.querySelector('#registerBtn');
+            const usernameInput = document.querySelector('#username');
+            const emailError = document.createElement('div');
+
+            emailError.className = 'professional-popup';
+            emailInput.parentNode.appendChild(emailError);
+
+            const isValidEmail = (email) => {
+                const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return regex.test(email);
+            };
+
+            const checkAvailability = async () => {
+                const email = emailInput.value;
+                const username = usernameInput.value;
+
+                if (email && !isValidEmail(email)) {
+                    displayErrorPopup('Please enter a valid email.');
+                    return; // Exit early, no need to check availability if format is wrong.
+                }
+
+                const response = await fetch(`/auth/check-availability?email=${email}&username=${username}`);
+                const data = await response.json();
+
+                if (data.emailExists) {
+                    displayErrorPopup('This email is already registered.');
+                } else if (data.usernameExists) {
+                    displayErrorPopup('This username is already taken.');
+                } else {
+                    hideErrorPopup();
+                }
+            };
+
+            const displayErrorPopup = (message) => {
+                emailError.textContent = message;
+                emailError.style.display = 'inline-block';
+                setTimeout(() => { emailError.style.opacity = '1'; }, 10);
+                registerBtn.disabled = true;
+                setTimeout(() => {
+                    emailError.style.opacity = '0';
+                    setTimeout(() => {
+                        emailError.textContent = '';
+                        emailError.style.display = 'none';
+                    }, 500);
+                }, 5000);
+            };
+
+            const hideErrorPopup = () => {
+                emailError.textContent = '';
+                emailError.style.opacity = '0';
+                emailError.style.display = 'none';
+                registerBtn.disabled = false;
+            };
+
+            emailInput.addEventListener('blur', checkAvailability);
+            emailInput.addEventListener('input', checkAvailability);
+            usernameInput.addEventListener('blur', checkAvailability);
+            usernameInput.addEventListener('input', checkAvailability);
+
+        </script>
+        
     </body>
 
 </html>
