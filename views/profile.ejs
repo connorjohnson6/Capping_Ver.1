@@ -1,50 +1,265 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!--PRE-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/styles/profile.css">
-    <title>Profile</title>
+    <title>Green Footprint</title>
 </head>
 <body>
-    <header>
-        <h1>Welcome to your page <%= user.username %> </h1>
-    </header>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Green Footprint</a>
+        <div class="d-flex">
+            <button class="btn btn-success me-2" onclick="redirectToQuiz()">Quiz</button>
 
-    <!-- TODO: make a new navbar that only goes with when the users are logged in -->
 
-    <nav>
-        <!-- Navbar placeholder -->
-    </nav>
+            <!-- Redirect to Settings -->
+            <button class="btn btn-outline-light me-2" onclick="window.location.href='/settings'"><i class="bi bi-gear"></i></button>
+            <!-- Redirect to Home -->
+            <a href="/views/index" class="btn btn-outline-light"><i class="bi bi-house-door"></i></a>
+        </div>
+    </div>
+  </nav>
 
-    <main>
-        <!-- Once the user hits the log out they need to sign back in.-->
-        <a href="/auth/logout" class="logout-btn">Logout</a>
-
-        <form method="POST" action="/profile-upload-single" enctype="multipart/form-data" class="upload-form">
-            <div>
-                <label>Upload profile picture</label>
-                <input type="file" name="profile-file" required/>
+    <!-- Profile Section -->
+    <section class="bg-light py-5">
+        <div class="container">
+            <div class="row">
+              <div class="col-lg-3 text-center">
+                <div class="profile-pic-container" onclick="uploadProfilePic()">
+                  <input type="file" id="profilePicInput" style="display:none;" onchange="submitProfilePic()">
+                  <% if(user.profilePicPath) { %>
+                      <img src="<%= user.profilePicPath %>" alt="Profile Picture" class="mb-3 text-dark">
+                  <% } else { %>
+                      <div class="profile-placeholder">
+                          <i class="bi bi-camera"></i>
+                      </div>
+                  <% } %>
+              </div>
+              
+              </div>
+              <div class="col-lg-9 d-flex align-items-center">
+                <div>
+                    <h2>Andrew Bernal</h2>
+                    <p><strong>Join Date:</strong> Sep 18, 2022</p>
+                    <p><strong>Friends:</strong> 50</p>
+                </div>
+                <div class="ms-auto">
+                    <button class="btn btn-success me-2" onclick="showFriendsPopup()">Friends</button>
+                    <button class="btn btn-outline-dark" onclick="showEditProfilePopup()">Edit Profile</button>
+                </div>
             </div>
-            <div>
-                <input type="submit" value="Upload" class="upload-btn" />
             </div>
-        </form>
+            <hr>
+            <div class="carbon-emissions">
+                <h3>Total Carbon Emissions: <span class="text-success">400</span></h3>
+                <ul>
+                    <li><strong>Transportation:</strong> 100</li>
+                    <li><strong>Lifestyle:</strong> 50</li>
+                    <li><strong>Travel:</strong> 150</li>
+                    <li><strong>Household:</strong> 100</li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
-        <hr>
+    <!-- Sub sections -->
+    <section class="p-5">
+      <div class="container">
+        <div class ="row text-center">
+          <div class="col-md">
+            <div class="card bg-light text-dark">
+              <div class="card-body text-center">
+                <div class ="h1">
+                 <i class="bi bi-tree"></i>
+                </div>
+                <h3 class="card-title mb-4">
+                  Lifestyle
+                </h3>
+                <p class="card-text">
+                  Annual Carbon Emissions
+                </p>
+                  <h8 class = "card-header">
+                    4KG
+                  </h8>
+              </div>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="card bg-light text-dark">
+              <div class="card-body text-center">
+                <div class ="h1">
+                 <i class="bi bi-person"></i>
+                </div>
+                <h3 class="card-title mb-4">
+                  Transportation
+                </h3>
+                <p class="card-text">
+                  Annual Carbon Emissions
+                </p>
+                  <h8 class = "card-header">
+                    50KG
+                  </h8>
+              </div>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="card bg-light text-dark">
+              <div class="card-body text-center">
+                <div class ="h1">
+                 <i class="bi bi-house"></i>
+                </div>
+                <h3 class="card-title mb-4">
+                  Household
+                </h3>
+                <p class="card-text">
+                  Annual Carbon Emissions
+                </p>
+                  <h8 class = "card-header">
+                    10KG
+                  </h8>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <!-- Statistics section -->
-        <section class="statistics">
-            <h2>Your Carbon Footprint Statistics</h2>
-            <!-- Example stats. You can fetch these from the backend and display here -->
-            <div class="stat">
-                <span>BlahBLahFiller</span> <span>250 kg</span>
+
+
+    <!-- Left Sidebar for Hyperlinks -->
+    <div class="position-fixed start-0 top-50 translate-middle-y bg-dark p-3" style="z-index:1000;">
+        <div class="d-flex flex-column align-items-start">
+            <a href="#" class="text-light mb-2">Link 1</a>
+            <a href="#" class="text-light mb-2">Link 2</a>
+            <a href="#" class="text-light mb-2">Link 3</a>
+        </div>
+    </div>
+
+    <!-- Friends Pop-up (similar to Instagram) -->
+    <div class="backdrop position-fixed top-0 start-0 w-100 h-100" style="z-index:1999; display:none; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
+      <div class="friends-popup position-fixed top-50 start-50 translate-middle bg-dark p-5" style="z-index:2000;">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+              <h3 class="text-light flex-grow-1 text-center">Friends</h3>
+              <button class="btn btn-outline-light" onclick="hideFriendsPopup()"><i class="bi bi-x"></i></button>
+          </div>
+          <input type="text" class="form-control mb-3" placeholder="Search for a username">
+          <ul class="text-light">
+            <li>
+              <div class="d-flex justify-content-between align-items-center friend-item"> <!--Friend item new addition-->
+                  <div class = "d-flex align-items-center"> <!--New line, originally <div> -->
+                      <span class="friend-profile-placeholder me-2"></span> <!--friend- portion is new. Used to be just profile-placeholder-->
+                      <span class="friend-name">LebronJames13423553462</span> <!--New addition, originally just LebronJames132443224-->
+                  </div>
+                  <span>40KG</span>
+              </div>
+          </li>
+          <li>
+            <div class="d-flex justify-content-between align-items-center friend-item">
+              <div class = "d-flex align-items-center"> 
+                    <span class="friend-profile-placeholder me-2"></span>
+                    <span class="friend-name">Brian Gormanly</span>
+                </div>
+                <span>28KG</span>
             </div>
-            <div class="stat">
-                <span>BlahBlahTreesPlantedOrSomething</span> <span>50</span>
+        </li>
+        <li>
+          <div class="d-flex justify-content-between align-items-center friend-item">
+            <div class = "d-flex align-items-center">
+                  <span class="friend-profile-placeholder me-2"></span>
+                  <span class="friend-name">EmissableEmissions</span>
+              </div>
+              <span>10KG</span>
+          </div>
+      </li>
+      <li>
+        <div class="d-flex justify-content-between align-items-center friend-item">
+          <div class = "d-flex align-items-center">
+                <span class="friend-profile-placeholder me-2"></span>
+                <span class="friend-name">Poland Spring</span>
             </div>
-        </section>
-    </main>
+            <span>72KG</span>
+        </div>
+    </li>
+    <li>
+      <div class="d-flex justify-content-between align-items-center friend-item">
+        <div class = "d-flex align-items-center">
+              <span class="friend-profile-placeholder me-2"></span>
+              <span class="friend-name">Combustion Engine</span>
+          </div>
+          <span>300KG</span>
+      </div>
+  </li>
+  <li>
+    <div class="d-flex justify-content-between align-items-center friend-item">
+      <div class = "d-flex align-items-center">
+            <span class="friend-profile-placeholder me-2"></span>
+            <span class="friend-name">Matthew Matthews Matthewson</span>
+        </div>
+        <span>16KG</span>
+    </div>
+</li>
+<li>
+  <div class="d-flex justify-content-between align-items-center friend-item">
+    <div class = "d-flex align-items-center">
+          <span class="friend-profile-placeholder me-2"></span>
+          <span class="friend-name">Oasis Wonderwall</span>
+      </div>
+      <span>8KG</span>
+  </div>
+</li>
+<li>
+  <div class="d-flex justify-content-between align-items-center friend-item">
+    <div class = "d-flex align-items-center">
+          <span class="friend-profile-placeholder me-2"></span>
+          <span class="friend-name">LoverInDistress</span>
+      </div>
+      <span>14KG</span>
+  </div>
+</li>
+<li>
+  <div class="d-flex justify-content-between align-items-center friend-item">
+    <div class = "d-flex align-items-center">
+          <span class="friend-profile-placeholder me-2"></span>
+          <span class="friend-name">Static User Content</span>
+      </div>
+      <span>30KG</span>
+  </div>
+</li>
+<li>
+  <div class="d-flex justify-content-between align-items-center friend-item">
+    <div class = "d-flex align-items-center">
+          <span class="friend-profile-placeholder me-2"></span>
+          <span class="friend-name">Lorax</span>
+      </div>
+      <span>81000KG</span>
+  </div>
+</li>
+      
+          </ul>
+            <span class="close-icon" onclick="hideFriendsPopup()">&times;</span>
+        </div>
+      </div>
+  </div>
+
+  <!-- Edit Profile Pop-up -->
+<div class="backdrop edit-profile-backdrop position-fixed top-0 start-0 w-100 h-100" style="z-index:1999; display:none; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);">
+  <div class="edit-profile-popup position-fixed top-50 start-50 translate-middle bg-dark p-5" style="z-index:2000;">
+      <!-- Your edit profile content goes here -->
+      <h3 class="text-light text-center">Edit Profile</h3>
+      <!-- Close button -->
+      <button class="btn btn-outline-light" onclick="hideEditProfilePopup()"><i class="bi bi-x"></i></button>
+  </div>
+</div>
+
+  
+
+    <script src="/js/profile.js"></script>
+    
 </body>
 </html>
