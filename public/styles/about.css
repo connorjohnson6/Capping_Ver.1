@@ -1,0 +1,117 @@
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.team-section {
+    text-align: center;
+    padding: 50px;
+    position: relative;
+    margin-top: 100px; /* Adjust this value as necessary */
+}
+
+#team-slider {
+    display: grid;
+    place-items: center;
+    height: 600px;
+    overflow: hidden;
+    position: relative;
+}
+
+.team-member-single {
+    background-color: #fff;
+    margin: 0;
+    padding: 40px;
+    width: 600px; /* Set a specific width for the profiles */
+    border-radius: 15px; /* This should create rounded corners */
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    left: 100%; /* Positioned off-screen to the left */
+    top: 50%;
+    transition: all 0.5s ease-in-out;
+    transform: translateX(0) translateY(-50%); /* Adjusted */
+    will-change: transform; /* Hardware acceleration */
+    
+}
+
+.team-member-single.exit-to-left {
+    left: -100%;
+    transform: translateX(-100%) translateY(-50%);
+    transition: all 0.5s ease-in-out;
+}
+
+.team-member-single.exit-to-right {
+    left: 200%;
+    transform: translateX(100%) translateY(-50%);
+    transition: all 0.5s ease-in-out;
+}
+
+.team-member-single.enter-from-left {
+    left: -100%;
+    transform: translateX(-50%) translateY(-50%);
+    transition: all 0.5s ease-in-out;
+}
+
+.team-member-single.enter-from-right {
+    left: 200%;
+    transform: translateX(-50%) translateY(-50%);
+    transition: all 0.5s ease-in-out;
+}
+
+.team-member-single.active {
+    left: 50%; /* Adjusted: Center the active item */
+    transform: translateX(-50%) translateY(-50%); /* Adjusted: Center the active item */
+
+}
+
+.team-member-single h2 {
+    margin: 10px 0;
+}
+
+.team-member-single img {
+    width: 200px; /* Adjust the width of the image */
+    height: 200px; /* Adjust the height of the image */
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover;
+}
+
+.social-media {
+    margin: 20px 0;
+}
+
+.social-media a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #333; /* Change this to your preferred icon color */
+}
+
+.social-media i {
+    font-size: 24px; /* Adjust icon size as needed */
+}
+
+.team-member-single p {
+    color: #666;
+    font-size: 16px;
+}
+
+
+#prev, #next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2em;
+    color: #333;
+    background-color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 3; /* Ensure arrows appear above team members */
+}
+
+#prev { left: 10px; }
+#next { right: 10px; }

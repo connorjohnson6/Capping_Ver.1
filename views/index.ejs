@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <link rel="stylesheet" href="/styles/index.css"> 
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script src="/js/index.js"></script>
     <title>A blog</title>
 </head>
@@ -14,11 +15,286 @@
 
 
     <%- include ("./partials/header"); %>
+
+    <div class="frontDiv">
+
+        <div class="image-slider">
+            <!-- Image slider or single image will be placed here -->
+            <img src="image/image-slider-image1.jpg" alt="Descriptive Image Text" class="slider-img">
+            <img src="image/image-slider-image2.jpg" alt="Descriptive Image Text" class="slider-img">
+            <img src="image/image-slider-image3.jpg" alt="Descriptive Image Text" class="slider-img">
+            <img src="image/image-slider-image4.jpg" alt="Descriptive Image Text" class="slider-img">
+
+        </div>
     
-    <h1>Home Page</h1>
+        <div class="content-container">
+            <h1>Your
+                <div class="word-slider">
+                    <span id="changing-word"></span>
+                </div>
+            </h1>
+            <h1>help reduce carbon emissions</h1>
+            <h3><br>Take the initiative! Join our social media community <br>to connect with others who are actively <br>working to reduce carbon emissions.</h3>
+        </div>
+    
+    </div> 
+
+
+
+
+<!--https://terrapass.com/-->
+
+    <div class="mainDiv">
+
+        <div class="headBodyTextDiv">
+            <div class="headBodyText">
+                <div class="headInnerText">
+                    <h3> Neutralize Your Carbon Impact </h3>
+                    <h4> Did you know the typical American emits 15 tons* of CO2 annually? It's like<br>
+                         pouring 1,633** gallons of gasoline into your vehicle!</h4>
+                    <h5> How can you contribute to positive change? </h5>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Image Sections Combined -->
+        <div class="gifSectionsContainer">
+            <div class="gifdivSection">
+    
+                <div class="gifImageSection">
+                    <img data-src="image/image1home.gif" src="">
+                </div>
+    
+                <div class="gifTextSection">
+                    <div class="gifTextInner">
+                        <h3>1. Determine Your Carbon Emissions.</h3>
+                        <p>Utilize our straightforward tool to gauge the <br>
+                           amount of CO2 you release through your everyday <br>
+                           activities.</p>
+                    </div>
+                </div>
+    
+            </div>
+    
+            <div class="gifdivSection">
+    
+                <div class="gifImageSection">
+                    <img data-src="image/image2home.gif" src="">
+                </div>
+    
+                <div class="gifTextSection">
+                    <div class="gifTextInner">
+                        <h3>2. Acquire Carbon Neutralizing Products.</h3>
+                        <p>Explore our variety of cost-effective items and <br>
+                           subscription options tailored to counterbalance <br>
+                           your environmental footprint.</p>
+                    </div>
+                </div>
+    
+            </div>
+    
+            <div class="gifdivSection">
+    
+                <div class="gifImageSection">
+                    <img data-src="image/image3home.gif" src="">
+                </div>
+                <div class="gifTextSection">
+                    <div class="gifTextInner">
+                        <h3>3. We Support Eco-Friendly Initiatives.</h3>
+                        <p>We allocate resources to projects that curb greenhouse gas emissions and <br>
+                           promote renewable energy, counteracting your everyday carbon impact.</p>                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div id="my-widget">
+        <div class="overlay"></div>
+        <div class="grid-container">
+          <div class="grid-item">
+            <img src="image/widget-icon1.png" class="icon">
+            <h1 class="number" data-target="10000" data-suffix="+">0</h1>
+            <p class="text">Created Profiles</p>
+          </div>
+          <div class="grid-item">
+            <img src="image/widget-icon2.png" class="icon">
+            <h1 class="number" data-target="97" data-suffix="%">0</h1>
+            <p class="text">Of our clients recommend us</p>
+          </div>
+          <div class="grid-item">
+            <img src="image/widget-icon3.png" class="icon">
+            <h1 class="number" data-target="3000" data-suffix="+">0</h1>
+            <p class="text">Trees planted</p>
+          </div>
+        </div>
+    </div>
+
+
+    <div class="field-item">  
+        <div class="podcast-feature">
+            <div class="podcast-container">
+                <div class="section-heading">
+                    <h1>Interested in Digging Deeper?</h1>
+                </div>
+                <div class="sub-heading">
+                    <p>Check out this episode from MIT's "Today I Learned: Climate" podcast discussing carbon offsets.</p>
+                </div>
+                <div class="podcast-ref">
+                    <article data-history-node-id="3867" role="article" about="/podcasts/e6-til-about-carbon-offsets" class="approved-content podcast-feature">
+                        <div class="content">
+                            <div class="simplecast-embed">
+                                <p>
+                                    <iframe frameborder="no" height="200px" scrolling="no" seamless="" src="https://player.simplecast.com/38bade34-de5a-4b54-8a90-cb46c3e27716?dark=false" width="100%"></iframe>
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </div> 
+            </div>
+        </div>
+    </div>
+    
+
+   
+
+ 
+    
 
     <%- include ("./partials/footer"); %>
 
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+    //javascript used for the word changer
+    const words = ['lifestyle', 'home', 'commute', 'diet']; // Words to rotate
+    let currentIndex = 1; // Start from the second word since the first word is already set
+    
+    const changingWordElement = document.getElementById('changing-word');
+    const images = document.querySelectorAll('.slider-img');
+
+    changingWordElement.textContent = words[0]; // Set the initial word without typing
+
+    function typeWord(word) {
+        let index = 0;
+        changingWordElement.textContent = ''; // Clear current word
+        const typingInterval = setInterval(() => {
+            changingWordElement.textContent += word[index]; // Add next character
+            index++;
+            if (index >= word.length) {
+                clearInterval(typingInterval); // Stop typing
+            }
+        }, 200); // Delay between each character
+    }
+
+    function changeContent() {
+        // Change Word
+        typeWord(words[currentIndex]);
+        
+        // Change Image
+        images.forEach((img, i) => {
+            img.classList.remove('active');
+            if (i === currentIndex) {
+                img.classList.add('active');
+            }
+        });
+
+        // Update Current Index
+        currentIndex = (currentIndex + 1) % words.length; // Assuming words.length is the same as images.length
+    }
+    
+    // Set interval to change content
+    setInterval(changeContent, 5000); // Adjust interval as needed
+
+   //end of word changer event  
+
+      //javascript for image slider
+
+      let currentImageIndex = 0;
+  
+      function showImage(index) {
+          images.forEach((img, i) => {
+              // Remove .active from all images
+              img.classList.remove('active');
+              // Add .active to the current image
+              if (i === index) {
+                  img.classList.add('active');
+              }
+          });
+      }
+  
+      function nextImage() {
+          currentImageIndex = (currentImageIndex + 1) % images.length;
+          showImage(currentImageIndex);
+      }
+  
+      if (images.length > 0) {
+          showImage(currentImageIndex);
+          setInterval(nextImage, 5000);
+      }
+      //end of image slider
+
+
+      //javascript for observer for gif event
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                const src = img.getAttribute("data-src");
+                img.setAttribute("src", src);
+                observer.unobserve(img);
+            }
+        });
+    });
+
+    document.querySelectorAll('.gifImageSection img').forEach(img => {
+        observer.observe(img);
+    });
+
+      //end of observer event
+
+      //javascript set for the number changer
+    
+      const counters = document.querySelectorAll('.number');
+
+      const counterObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const counter = entry.target;
+            const speed = 300; // Lower value for slower counting
+            const updateCount = () => {
+              const target = +counter.getAttribute('data-target');
+              const count = +counter.innerText.replace(',', ''); // Remove commas before conversion to number
+              const suffix = counter.getAttribute('data-suffix') || ''; // Get the suffix
+              const increment = target / speed;
+    
+              if (count < target) {
+                counter.innerText = (Math.ceil(count + increment)).toLocaleString(); // Format number with commas
+                setTimeout(updateCount, 5); // Higher value for slower updates
+              } else {
+                counter.innerText = target.toLocaleString() + suffix; // Format number with commas and append the suffix
+                counterObserver.unobserve(counter); // Stop observing the counter once it reaches the target
+              }
+            };
+            updateCount();
+          }
+        });
+      }, { threshold: 1.0 });
+    
+      counters.forEach(counter => {
+        counterObserver.observe(counter); // Start observing each counter
+      });
+
+      //end of number changer event handler
+
+
+
+
+    });
+</script>
 
 </html>

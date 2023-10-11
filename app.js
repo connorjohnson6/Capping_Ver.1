@@ -69,10 +69,11 @@ app.get('/about', (req, res) =>{
     res.render('about')
 })
 
-//about me tab
+//log in tab
 app.get('/login', (req, res) =>{
     res.render('login')
 })
+
 
 //404 page
 app.use(function(req, res, next){

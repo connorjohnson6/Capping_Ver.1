@@ -5,16 +5,126 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <link rel="stylesheet" href="/styles/about.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <title>A blog</title>
 </head>
     <%- include ("./partials/header"); %>
-<body>
+<body style="background-image: url('image/aboutUs-Background.jpg'); background-size: cover; margin: 0;">
     
-    <h1>About Page</h1>
     
+    
+  
+  <div class="team-section">
+        
+        <!-- Navigation arrows -->
+        <i class="fa fa-arrow-left" id="prev"></i>
+        <i class="fa fa-arrow-right" id="next"></i>
+    
+        <!-- Team member container -->
+        <div id="team-slider">
+          <!-- Individual team members -->
+
+          <div class="team-member-single active">
+            <h2>Connor Johnson</h2>
+            <img src="devProfile-image/Connor-Johnson.jpeg" alt="Connor Johnson">
+            <div class="social-media">
+              <a href="developer-instagram-link"><i class="fa fa-instagram"></i></a>
+              <a href="developer-twitter-link"><i class="fa fa-twitter"></i></a>
+              <a href="developer-linkedin-link"><i class="fa fa-linkedin"></i></a>
+              <a href="developer-github-link"><i class="fa fa-github"></i></a>
+            </div>
+            <p>Developer description goes here. This can include their role, expertise, and contributions to the project.</p>
+          </div>
 
 
+          <div class="team-member-single">
+            <h2>Alexander Hanys</h2>
+            <img src="devProfile-image/Alexander-Hanys.jpeg" alt="Alexander Hanys">
+            <div class="social-media">
+              <a href="developer-instagram-link"><i class="fa fa-instagram"></i></a>
+              <a href="developer-twitter-link"><i class="fa fa-twitter"></i></a>
+              <a href="developer-linkedin-link"><i class="fa fa-linkedin"></i></a>
+              <a href="developer-github-link"><i class="fa fa-github"></i></a>
+            </div>
+            <p>Developer description goes here. This can include their role, expertise, and contributions to the project.</p>
+          </div>
+
+
+          <div class="team-member-single">
+            <h2>Andrew Bernal</h2>
+            <img src="devProfile-image/Andrew-Bernal.jpeg" alt="Andrew Bernal">
+            <div class="social-media">
+              <a href="developer-instagram-link"><i class="fa fa-instagram"></i></a>
+              <a href="developer-twitter-link"><i class="fa fa-twitter"></i></a>
+              <a href="developer-linkedin-link"><i class="fa fa-linkedin"></i></a>
+              <a href="developer-github-link"><i class="fa fa-github"></i></a>
+            </div>
+            <p>Developer description goes here. This can include their role, expertise, and contributions to the project.</p>
+          </div>
+
+
+          <div class="team-member-single">
+            <h2>Collin Ruggeberg</h2>
+            <img src="devProfile-image/Collin-Ruggeberg.jpeg" alt="Collin Ruggeberg">
+            <div class="social-media">
+              <a href="developer-instagram-link"><i class="fa fa-instagram"></i></a>
+              <a href="developer-twitter-link"><i class="fa fa-twitter"></i></a>
+              <a href="developer-linkedin-link"><i class="fa fa-linkedin"></i></a>
+              <a href="developer-github-link"><i class="fa fa-github"></i></a>
+            </div>
+            <p>Developer description goes here. This can include their role, expertise, and contributions to the project.</p>
+          </div>
+
+
+          <div class="team-member-single">
+            <h2>Matthew O'Malley</h2>
+            <img src="devProfile-image/Matthew-O'Malley.jpeg" alt="Matthew O'Malley">
+            <div class="social-media">
+              <a href="developer-instagram-link"><i class="fa fa-instagram"></i></a>
+              <a href="developer-twitter-link"><i class="fa fa-twitter"></i></a>
+              <a href="developer-linkedin-link"><i class="fa fa-linkedin"></i></a>
+              <a href="developer-github-link"><i class="fa fa-github"></i></a>
+            </div>
+            <p>Developer description goes here. This can include their role, expertise, and contributions to the project.</p>
+          </div>
+        </div>
+      </div>
+
+    
+    </body>
+
+   
 
 </body>
+    <%- include ("./partials/footer"); %>
+
+    <script>
+
+        $(document).ready(function() {
+            $('#team-slider .team-member-single:first').addClass('active');
+
+            $('#next').on('click', function() {
+                var current = $('#team-slider .team-member-single.active');
+                current.removeClass('active').addClass('exit-to-left');
+                
+                var nextMember = current.next().length ? current.next() : $('#team-slider .team-member-single:first');
+                nextMember.removeClass('exit-to-left exit-to-right').addClass('active enter-from-right');
+            });
+            
+            $('#prev').on('click', function() {
+                var current = $('#team-slider .team-member-single.active');
+                current.removeClass('active').addClass('exit-to-right');
+                
+                var prevMember = current.prev().length ? current.prev() : $('#team-slider .team-member-single:last');
+                prevMember.removeClass('exit-to-left exit-to-right').addClass('active enter-from-left');
+            });
+        });
+
+        
+    </script>
+    
+
 
 </html>
