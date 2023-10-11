@@ -1,74 +1,141 @@
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f7f6;
-    color: #333;
-    margin: 0;
-    padding: 0;
+.profile-pic-container { /* Pre changes!!!*/
+  width: 150px;   /* Width of the square container */
+  height: 150px;  /* Height of the square container */
+  position: relative;  /* Set to relative so the child image can be absolutely positioned */
+  overflow: hidden;   /* Hide anything that goes outside this container */
+  border-radius: 50%; /* Make it circular */
+  margin-left: 90px;
+  margin-bottom: 5px;
+  color: #808080;
 }
 
-header {
-    background-color: #58a27c;
-    color: white;
-    padding: 20px 0;
-    text-align: center;
+.profile-pic-container img {
+  display: block;
+  position: absolute;  
+  top: 50%;  /* Center the image vertically */
+  left: 50%; /* Center the image horizontally */
+  transform: translate(-50%, -50%); /* Required to truly center the image */
+  min-width: 100%;   /* Ensure image covers full width */
+  min-height: 100%;  /* Ensure image covers full height */
+  object-fit: cover; /* Cover the entire container without distortion */
 }
 
-nav {
-    /* Navbar styles placeholder */
+/* user datails */
+
+.col-lg-9 {
+  margin-left: -20px;
+  margin-top: 12px;
 }
 
-a.logout-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #ed786a;
-    color: white;
-    text-decoration: none;
-    border-radius: 25px;
-    transition: background-color 0.3s;
+.ms-auto {
+  margin-bottom: 88px;
 }
 
-a.logout-btn:hover {
-    background-color: #db5a54;
+.profile-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #a0a0a0; /* Medium gray */
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.upload-form {
-    margin: 20px;
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+.profile-placeholder:hover {
+  background-color: #878787; /* Slightly darker gray on hover */
 }
 
-.upload-btn {
-    padding: 10px 20px;
-    background-color: #58a27c;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 25px;
-    transition: background-color 0.3s;
+.profile-placeholder i {
+  font-size: 3rem;
+  color: white;
 }
 
-.upload-btn:hover {
-    background-color: #477f6b;
+.friends-popup {
+  max-width: 440px; /* or your preferred width */
+  width: 100%;
+  max-height: 440px; 
+  height: 100%;
+  overflow-y: auto; /* In case of many friends, this will allow scrolling */
+  border-radius: 30px; /* Adjust the value as per your liking */
 }
 
-.statistics {
-    margin: 40px 20px;
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+.friends-popup ul {
+  list-style-type: none;
+  padding-left: 0;
 }
 
-.statistics h2 {
-    font-size: 1.5em;
-    margin-bottom: 20px;
+.friends-popup li::before {
+  content: "";
+  display: inline;
 }
 
-.stat {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px 0;
+.carbon-emissions ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.carbon-emissions li::before {
+  content: "- ";
+  display: inline;
+}
+
+.friend-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block; 
+  max-width: 150px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+
+}
+
+.friend-profile-placeholder {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-color: lightgray;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.close-icon {
+  cursor: pointer;
+  font-size: 1.5rem; 
+  line-height: 1;
+}
+
+.friends-popup h3.text-light {
+  border-bottom: 1px solid #888; 
+  padding-bottom: 10px;
+  position: relative; /* Set to relative to position the pseudo-element */
+  margin: 0;
+  padding-left: 0px;  /* Add padding to move the text to the right */
+}
+
+.bi-x-lg {
+  font-size: 1.5rem;
+}
+
+/* Adding more space between each friend-name */
+.friend-item {
+  margin-bottom: 15px; /* Adjust this value for more or less space */
+}
+
+/* Styling the search bar with a light gray color */
+.friends-popup input[type="text"] {
+  background-color: #D1D1D1; /* Light gray color */
+  border: none; /* Removes the default border */
+}
+
+.friends-popup input[type="text"]:focus {
+  border: none; /* Ensures no border when the input is in focus */
+  box-shadow: none; /* Removes the default blue glow when in focus */
+}
+
+.friends-popup .btn.btn-outline-light {
+  position: absolute;  /* Absolute positioning */
+  top: 15px;           /* Distance from the top */
+  right: 15px;         /* Distance from the right */
 }
