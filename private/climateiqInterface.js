@@ -1,4 +1,4 @@
-
+//this is a very basic example. I will be writing functions to simplify this process.
 
 const API_KEY = "ZCCX5Y2TNMMSEVHC68G1BG2P5J0T";
 const url = "https://beta4.api.climatiq.io/search";
