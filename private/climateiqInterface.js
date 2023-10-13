@@ -1,32 +1,33 @@
-//this is a very basic example. I will be writing functions to simplify this process.
-
 const API_KEY = "ZCCX5Y2TNMMSEVHC68G1BG2P5J0T";
-const url = "https://beta4.api.climatiq.io/search";
+const authHeader = { Authorization: `Bearer ${API_KEY}`};
+const TravelURL = "https://beta4.api.climatiq.io/travel/distance";
 const query = "grid mix";
 const data_version = "^3";
 
-const query_params = {
-    // Free text query can be written as the "query" parameter
-    query: query,
-    data_version: data_version,
-    // You can also filter on region, year, source, and more
-    // "AU" is Australia
-    region: "AU",
-};
+//https://www.climatiq.io/docs/api-reference/travel
 
-const authorization_headers = {
-    Authorization: `Bearer ${API_KEY}`,
-};
+function getDrivingData(start, end){
 
-// Convert the query_params object to a query string
-const queryString = new URLSearchParams(query_params).toString();
+}
 
-// Dynamically import 'node-fetch' and perform the GET request
-import('node-fetch')
+function getFlightData(start, end){ 
+    const query = {
+        origin: {
+            query: start
+        },
+        destination: {
+            query: end
+        },
+        travel_mode: "air"
+    }
+    const queryString = new URLSearchParams(query).toString();
+
+    let output;
+    import('node-fetch')
     .then(({ default: fetch }) => {
-        return fetch(`${url}?${queryString}`, {
+        return fetch(`${TravelURL}?${queryString}`, {
             method: 'GET',
-            headers: authorization_headers,
+            headers: authHeader,
         });
     })
     .then((response) => {
@@ -38,8 +39,17 @@ import('node-fetch')
     .then((data) => {
         // Process the JSON response here
         console.log(data);
+        output = data;
     })
     .catch((error) => {
         // Handle errors here
         console.error('Error:', error);
     });
+    return output;
+
+}
+
+function getTrainData(origin, end){
+
+}
+console.log(getFlightData("New York, New York", "Denver, Colorado"));
