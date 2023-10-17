@@ -1,4 +1,4 @@
-import "./climateiqInterface"
+/*
 
 //this is a very basic example. I will be writing functions to simplify this process. Also using this example to test the API.
 const API_KEY = "ZCCX5Y2TNMMSEVHC68G1BG2P5J0T";
@@ -44,5 +44,42 @@ import('node-fetch')
         // Handle errors here
         console.error('Error:', error);
     });
+*/
+
+const url = 'https://beta4.api.climatiq.io/travel/distance';
+const apiKey = 'ZCCX5Y2TNMMSEVHC68G1BG2P5J0T';
+
+const data = {
+  origin: {
+    locode: 'DE-HAM'
+  },
+  destination: {
+    query: 'Berlin'
+  },
+  travel_mode: 'car',
+  car_details: {
+    car_type: 'plugin_hybrid'
+  }
+};
+
+(async () => {
+  const fetch = (await import('node-fetch')).default;
+  
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  if (response.ok) {
+    const responseData = await response.json();
+    console.log(responseData);
+  } else {
+    console.error('Error:', response.status, response.statusText);
+  }
+})();
 
 
