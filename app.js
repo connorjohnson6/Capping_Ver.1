@@ -1,21 +1,30 @@
 const express = require('express');
-const authRoutes = require('./routes/auth-routes');
-const profileRoutes = require('./routes/profile-routes');
-const passportSetup = require('./config/passport-setup');
+const authRoutes = require('./landing_Page/routes/auth-routes');
+const profileRoutes = require('./landing_Page/routes/profile-routes');
+const passportSetup = require('./landing_Page/config/passport-setup'); //do not delete variable
 const mongoose = require('mongoose');
-const keys = require('./config/keys');
+const keys = require('./landing_Page/config/keys');
+const usersRoutes = require('./client_Page/routes/users-routes');
+const postRoutes = require('./client_Page/routes/posts-routes');
 const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const path = require('path');
+
+
 
 const app = express();
 const port = 3000
 
 mongoose.set('strictQuery', true);
 
-// Set Templating Engine
+// Set Templating Engine 
 app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, 'landing_Page/views'));
+app.use(express.static(path.join(__dirname, 'landing_Page/public')));
+
+
 
 app.use(bodyParser.json());  // to handle JSON payloads
 app.use(bodyParser.urlencoded({ extended: true }));  // to handle URL-encoded payloads
@@ -45,9 +54,15 @@ mongoose.connect(keys.mongodb.dbURI)
 
 app.use(express.static('public'));
 
+//middleware
+app.use(express.json());
+
 // Set up routes
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
+app.use('/users', usersRoutes);
+app.use('/posts', postRoutes);
+
 
 // Navigation
 app.get('', (req, res) => {
