@@ -43,6 +43,10 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Serve the static files from the React app
+app.use(express.static(path.join(__dirname, 'client_Page/build')));
+
+
 // Connect to mongodb
 mongoose.connect(keys.mongodb.dbURI)
     .then(() => {
@@ -88,6 +92,11 @@ app.get('/about', (req, res) =>{
 app.get('/login', (req, res) =>{
     res.render('login')
 })
+
+// Handles any requests that don't match the ones above
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client_Page/build', 'index.html'));
+});
 
 
 //404 page
