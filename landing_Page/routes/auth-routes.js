@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
-const User = require('../models/user-model');
+const User = require('../../api/models/user-model');
 
 // auth login
 router.get('/login', (req, res) => {

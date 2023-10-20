@@ -4,8 +4,8 @@ const profileRoutes = require('./landing_Page/routes/profile-routes');
 const passportSetup = require('./landing_Page/config/passport-setup'); //do not delete variable
 const mongoose = require('mongoose');
 const keys = require('./landing_Page/config/keys');
-const usersRoutes = require('./client_Page/routes/users-routes');
-const postRoutes = require('./client_Page/routes/posts-routes');
+const usersRoutes = require('./api/routes/users');
+const postRoutes = require('./api/routes/posts');
 const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
@@ -16,6 +16,10 @@ const path = require('path');
 
 const app = express();
 const port = 3000
+
+const cors = require('cors');
+app.use(cors());
+
 
 mongoose.set('strictQuery', true);
 
@@ -64,6 +68,9 @@ app.use(express.json());
 // Set up routes
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
+
+app.use("/api/posts", postRoutes);
+
 app.use('/users', usersRoutes);
 app.use('/posts', postRoutes);
 
