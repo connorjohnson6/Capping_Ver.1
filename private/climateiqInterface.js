@@ -6,9 +6,9 @@ const travelURL = "https://beta4.api.climatiq.io/travel/distance";
 /**
  * Quereys ClimateIQ for driving data. 
  * @param {string} start - the origin city. Ex: "Boston, MA" 
- * @param {string} end - the destination city. this and the start are a query; they search a database for best match.
+ * @param {string} end - the destination city. this and the start are a query; they search a database for best match. There is no strict format.
  * @param {string} [carType] - car types: "petrol", "diesel", "hybrid", "plugin_hybrid", "battery". Defaults to average car.
- * @param {string} [carSize] - car sizes: "small" (below 1.7L) "medium" (1.7L-2.0L) "large" (above 2.0L). Defaults to average car.
+ * @param {string} [carSize] - car sizes: "small" (below 1.4L) "medium" (1.4L-2.0L) "large" (above 2.0L). Defaults to average car.
  * @returns {JSON} The resulting query of the API. important Properties: co2e (double), co2e_unit (string), distance_km (double)
  */
 function getDrivingData(start, end, carType = "average", carSize = "average"){ 
@@ -98,7 +98,7 @@ function getFlightData(start, end, flightClass = "average"){
 /**
  * Quereys ClimateIQ for Train data. 
  * @param {string} start - the origin city. Ex: "Boston, MA" 
- * @param {string} end - the destination city. this and the start are a query; they search a database for best match.
+ * @param {string} end - the destination city. this and the start are a query; they search a database for best match. There is no strict format.
  * @returns {JSON} The resulting query of the API. important Properties: co2e (double), co2e_unit (string), distance_km (double)
  */
 function getTrainData(start, end){
@@ -136,6 +136,6 @@ function getTrainData(start, end){
 }
 
 //example Calls:
-//getDrivingData("Poughkeepsie, NY", "Montreal, Canada", "petrol", "medium");
+//getDrivingData("Suffern, NY", "San Antonio, TX", "petrol", "medium");
 //getFlightData("EWR", "DEN", "economy");
 //getTrainData("New York, New York", "Boston, MA");
