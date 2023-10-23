@@ -1,4 +1,4 @@
-const API_KEY = "ZCCX5Y2TNMMSEVHC68G1BG2P5J0T";
+const API_KEY = "INSERT KEY HERE"; //key found in internal shared doc.
 const travelURL = "https://beta4.api.climatiq.io/travel/distance";
 //https://www.climatiq.io/docs/api-reference/travel
 
