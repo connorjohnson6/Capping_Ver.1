@@ -1,4 +1,6 @@
-const API_KEY = "INSERT KEY HERE"; //key found in internal shared doc.
+const keys = require('../config/keys');
+
+const API_KEY = keys.climateIQ.API_KEY; //key found in internal shared doc.
 const travelURL = "https://beta4.api.climatiq.io/travel/distance";
 //https://www.climatiq.io/docs/api-reference/travel
 
@@ -136,6 +138,6 @@ function getTrainData(start, end){
 }
 
 //example Calls:
-//getDrivingData("Suffern, NY", "San Antonio, TX", "petrol", "medium");
+getDrivingData("Suffern, NY", "San Antonio, TX", "petrol", "medium");
 //getFlightData("EWR", "DEN", "economy");
 //getTrainData("New York, New York", "Boston, MA");

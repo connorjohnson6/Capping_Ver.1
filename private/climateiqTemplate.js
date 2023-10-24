@@ -1,7 +1,6 @@
 /*
 
 //this is a very basic example. I will be writing functions to simplify this process. Also using this example to test the API.
-const API_KEY = "ZCCX5Y2TNMMSEVHC68G1BG2P5J0T";
 const url = "https://beta4.api.climatiq.io/search";
 const query = "grid mix";
 const data_version = "^3";
@@ -45,9 +44,9 @@ import('node-fetch')
         console.error('Error:', error);
     });
 */
-
+const keys = require('../config/keys');
 const url = 'https://beta4.api.climatiq.io/travel/distance';
-const apiKey = 'ZCCX5Y2TNMMSEVHC68G1BG2P5J0T';
+const apiKey = keys.climateIQ.API_KEY;
 
 const data = {
   origin: {
