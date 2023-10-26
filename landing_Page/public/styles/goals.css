@@ -24,23 +24,38 @@ html, body {
 header {
     background-color: #009900; /* Dark green */
     color: #fff; /* White text */
-    padding: 10px;
     text-align: center;
+    margin-top: 0px;
+    padding: 10px 0;
 }
 
 h1 {
-    color: #009900; /* Dark green */
+    color: #cfcfcf; /* Dark green */
     font-size: 24px;
     margin: 20px 0;
 }
 
 /* Style the goal setting form */
-#goal-form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+/* Style for the dropdown select */
+#carbon-goal {
+    padding: 10px; /* Add padding to increase the size */
+    font-size: 18px; /* Increase the font size */
+    width: 100%; /* Make the dropdown full width */
+    max-width: 300px; /* Limit the maximum width */
 }
+
+/* Style for the "Set Goal" button */
+#carbon-goal-form button {
+    padding: 12px 20px; /* Increase padding for button size */
+    font-size: 18px; /* Increase the font size */
+}
+
+/* Optional: Style for the form container */
+#goal-form {
+    text-align: center; /* Center-align the form elements */
+    margin-top: 20px; /* Add some margin for spacing */
+}
+
 
 /* Style the form elements */
 label {
@@ -75,7 +90,7 @@ button[type="submit"]:hover {
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    background: #ccc;
+    background: #ffffff;
     margin: 20px auto;
 }
 
@@ -108,11 +123,59 @@ button[type="submit"]:hover {
     color: #333;
 }
 
-@keyframes progress-animation {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.button-headers{
+  padding:20px;
 }
+
+#leaderboard {
+    display: none;
+  }
+
+  #leaderboard h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  #goals-button, #leaderboards-button {
+    align-items: center;
+    margin-top: 12%;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 15px;
+    padding: 8px 10px;
+    background-color: #61d485; 
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+
+  #goals-button:hover, #leaderboards-button:hover {
+    background-color: #0056b3; 
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  tr:nth-child(odd) {
+    background-color: #fff;
+  }
+
+  th:first-child, td:first-child {
+    width: 50%;
+  }

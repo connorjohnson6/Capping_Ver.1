@@ -9,16 +9,29 @@
     </head>
     <%- include ("./partials/header"); %>
     <body>
-        <h1>Goals</h1>
+        <div id="button-headers">
+            <button id="goals-button">Goals</button>
+            <button id="leaderboards-button">Leaderboards</button>
+        </div>
+
         <div id="goal-form">
             <h2>Set Your Carbon Emissions Goal For The Month</h2>
             <form id="carbon-goal-form">
-                <label for="carbon-goal">Desired Carbon Emissions (in tons):</label>
-                <input type="number" id="carbon-goal" name="carbon-goal" min="0" step="0.01" required>
+                <label for="carbon-goal">Select Your Desired Carbon Emissions Goal:</label>
+                <select id="carbon-goal" name="carbon-goal" required>
+                    <option value="8294">8294 tons</option>
+                    <option value="16.2">16.2 tons</option>
+                    <option value="4.8">4.8 tons</option>
+                </select>
                 <button type="submit">Set Goal</button>
             </form>
         </div>
-
+        
+        <div id="goal-message" style="display: none;">
+            <h2>Your Carbon Emissions Goal:</h2>
+            <p id="selected-goal"></p>
+        </div>
+        
         <!-- Progress Tracker -->
         <div id="progress-tracker">
             <h2>Your Progress</h2>
@@ -26,8 +39,127 @@
                 <div class="progress">
                     <div class="progress-bar" id="progress-bar"></div>
                 </div>
-                <div class="percentage" id="progress-percentage">10%</div>
+                <div class="percentage" id="progress-percentage">0%</div>
             </div>
         </div>
+
+    <!-- Leaderboard Section -->
+    <div id="leaderboard" style="display: none;">
+        <h2>Leaderboard</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Progress</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+                <!-- Leaderboard content will be dynamically populated here -->
+            </tbody>
+        </table>
+    </div>
+
+        <script>
+            // Get references to the buttons and content divs
+            const goalsButton = document.getElementById("goals-button");
+            const leaderboardsButton = document.getElementById("leaderboards-button");
+            const goalForm = document.getElementById("goal-form");
+            const goalMessage = document.getElementById("goal-message");
+            const leaderboard = document.getElementById("leaderboard");
+            const carbonGoalForm = document.getElementById("carbon-goal-form");
+            const carbonGoalSelect = document.getElementById("carbon-goal");
+            const selectedGoalText = document.getElementById("selected-goal");
+
+            // Variable to store the selected goal
+            let selectedGoal = null;
+
+            // Function to show the goals content and hide the leaderboard content
+            function showGoals() {
+                goalForm.style.display = "block";
+                goalMessage.style.display = "none";
+                leaderboard.style.display = "none";
+                if (selectedGoal !== null) {
+                    document.getElementById("carbon-goal").value = selectedGoal;
+                }
+            }
+
+            // Function to show the leaderboard content and hide the goals content
+            function showLeaderboard() {
+                goalForm.style.display = "none";
+                goalMessage.style.display = "none";
+                leaderboard.style.display = "block";
+            }
+
+            // Add click event listeners to the buttons
+            goalsButton.addEventListener("click", showGoals);
+            leaderboardsButton.addEventListener("click", showLeaderboard);
+
+            // Add an event listener to the form
+            if (selectedGoal == null){
+                carbonGoalForm.addEventListener("submit", function (event) {
+                    event.preventDefault(); // Prevent form submission
+
+                    // Get the selected goal from the dropdown
+                    selectedGoal = carbonGoalSelect.value;
+
+                    // Display the selected goal in the goal message div
+                    showGoals();
+                    selectedGoalText.textContent = `Your Carbon Emissions Goal: ${selectedGoal} tons`;
+                    
+                    // Hide the goal form and show the goal message
+                    goalForm.style.display = "none";
+                    goalMessage.style.display = "block";
+                });
+            } else {
+                event.preventDefault();
+                
+                goalForm.style.display = "none";
+                goalMessage.style.display = "block";
+                selectedGoalText.textContent = `Your Carbon Emissions Goal: ${selectedGoal} tons`;
+            }
+
+            // Sample data for the leaderboard (replace this with actual data)
+            const leaderboardData = [
+                { username: "User1", progress: 25 },
+                { username: "User2", progress: 50 },
+                { username: "User3", progress: 75 },
+                { username: "User4", progress: 100 },
+            ];
+
+            // Sort the leaderboard data by completion percentage (progress)
+            leaderboardData.sort((a, b) => b.progress - a.progress);
+
+            // Function to populate the leaderboard
+            function populateLeaderboard() {
+                const leaderboardBody = document.getElementById("leaderboard-body");
+
+                // Clear the existing content
+                leaderboardBody.innerHTML = "";
+
+                // Loop through the sorted leaderboard data and create rows
+                leaderboardData.forEach((user) => {
+                    const row = document.createElement("tr");
+
+                    // Create username cell
+                    const usernameCell = document.createElement("td");
+                    usernameCell.textContent = user.username;
+
+                    // Create progress cell
+                    const progressCell = document.createElement("td");
+                    progressCell.textContent = `${user.progress}%`;
+
+                    // Append cells to the row
+                    row.appendChild(usernameCell);
+                    row.appendChild(progressCell);
+
+                    // Append the row to the leaderboard body
+                    leaderboardBody.appendChild(row);
+                });
+            }
+
+            // Call the function to initially populate the leaderboard
+            populateLeaderboard();
+
+        </script>
     </body>
 </html>
