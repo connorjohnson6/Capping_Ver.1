@@ -50,10 +50,21 @@ h1 {
     font-size: 18px; /* Increase the font size */
 }
 
-/* Optional: Style for the form container */
+#main-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
 #goal-form {
-    text-align: center; /* Center-align the form elements */
-    margin-top: 20px; /* Add some margin for spacing */
+    flex: 1;
+    margin-right: 20px; /* Add some spacing between the elements */
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+#progress-tracker {
+    flex: 1;
 }
 
 

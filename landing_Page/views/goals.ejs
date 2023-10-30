@@ -9,55 +9,51 @@
     </head>
     <%- include ("./partials/header"); %>
     <body>
-        <div id="button-headers">
-            <button id="goals-button">Goals</button>
-            <button id="leaderboards-button">Leaderboards</button>
-        </div>
-
-        <div id="goal-form">
-            <h2>Set Your Carbon Emissions Goal For The Month</h2>
-            <form id="carbon-goal-form">
-                <label for="carbon-goal">Select Your Desired Carbon Emissions Goal:</label>
-                <select id="carbon-goal" name="carbon-goal" required>
-                    <option value="8294">8294 tons</option>
-                    <option value="16.2">16.2 tons</option>
-                    <option value="4.8">4.8 tons</option>
-                </select>
-                <button type="submit">Set Goal</button>
-            </form>
-        </div>
-        
-        <div id="goal-message" style="display: none;">
-            <h2>Your Carbon Emissions Goal:</h2>
-            <p id="selected-goal"></p>
-        </div>
-        
-        <!-- Progress Tracker -->
-        <div id="progress-tracker">
-            <h2>Your Progress</h2>
-            <div class="circular-progress">
-                <div class="progress">
-                    <div class="progress-bar" id="progress-bar"></div>
+        <div id="main-content"style="margin-top: 14%;">
+            <!-- Progress Tracker -->
+            <div id="progress-tracker">
+                <h2>Your Progress</h2>
+                <div class="circular-progress">
+                    <div class="progress">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <div class="percentage" id="progress-percentage">0%</div>
                 </div>
-                <div class="percentage" id="progress-percentage">0%</div>
+            </div>
+
+            <div id="goal-form">
+                <h2>Set Your Carbon Emissions Goal For The Month</h2>
+                <form id="carbon-goal-form">
+                    <label for="carbon-goal">Select Your Desired Carbon Emissions Goal:</label>
+                    <select id="carbon-goal" name="carbon-goal" required>
+                        <option value="8294">8294 tons</option>
+                        <option value="16.2">16.2 tons</option>
+                        <option value="4.8">4.8 tons</option>
+                    </select>
+                    <button type="submit">Set Goal</button>
+                </form>
+                <div id="goal-message" >
+                    <h2>Your Carbon Emissions Goal:</h2>
+                    <p id="selected-goal"></p>
+                </div>
             </div>
         </div>
 
-    <!-- Leaderboard Section -->
-    <div id="leaderboard" style="display: none;">
-        <h2>Leaderboard</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Progress</th>
-                </tr>
-            </thead>
-            <tbody id="leaderboard-body">
-                <!-- Leaderboard content will be dynamically populated here -->
-            </tbody>
-        </table>
-    </div>
+        <!-- Leaderboard Section -->
+        <div id="leaderboard">
+            <h2>Leaderboard</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Progress</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <!-- Leaderboard content will be dynamically populated here -->
+                </tbody>
+            </table>
+        </div>
 
         <script>
             // Get references to the buttons and content divs
@@ -74,25 +70,8 @@
             let selectedGoal = null;
 
             // Function to show the goals content and hide the leaderboard content
-            function showGoals() {
-                goalForm.style.display = "block";
-                goalMessage.style.display = "none";
-                leaderboard.style.display = "none";
-                if (selectedGoal !== null) {
-                    document.getElementById("carbon-goal").value = selectedGoal;
-                }
-            }
-
-            // Function to show the leaderboard content and hide the goals content
-            function showLeaderboard() {
-                goalForm.style.display = "none";
-                goalMessage.style.display = "none";
-                leaderboard.style.display = "block";
-            }
-
-            // Add click event listeners to the buttons
-            goalsButton.addEventListener("click", showGoals);
-            leaderboardsButton.addEventListener("click", showLeaderboard);
+            goalForm.style.display = "block";
+            leaderboard.style.display = "block";
 
             // Add an event listener to the form
             if (selectedGoal == null){
@@ -124,6 +103,8 @@
                 { username: "User2", progress: 50 },
                 { username: "User3", progress: 75 },
                 { username: "User4", progress: 100 },
+                { username: "User5", progress: 32 },
+                { username: "User6", progress: 57 },
             ];
 
             // Sort the leaderboard data by completion percentage (progress)
