@@ -88,6 +88,11 @@ app.get('/about', (req, res) =>{
     res.render('about')
 })
 
+//products tab
+app.get('/products', (req, res) =>{
+    res.render('products')
+})
+
 //log in tab
 app.get('/login', (req, res) =>{
     res.render('login')
