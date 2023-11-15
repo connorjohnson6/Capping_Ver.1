@@ -30,9 +30,9 @@
                         <option value="16.2">16.2 tons</option>
                         <option value="4.8">4.8 tons</option>
                     </select>
-                    <button type="submit">Set Goal</button>
+                    <button type="submit" id="set-goal-button">Set Goal</button>
                 </form>
-                <div id="goal-message" >
+                <div id="goal-message">
                     <h2>Your Carbon Emissions Goal:</h2>
                     <p id="selected-goal"></p>
                 </div>
@@ -65,6 +65,7 @@
             const carbonGoalForm = document.getElementById("carbon-goal-form");
             const carbonGoalSelect = document.getElementById("carbon-goal");
             const selectedGoalText = document.getElementById("selected-goal");
+            const setGoalButton = document.getElementById("set-goal-button");
 
             // Variable to store the selected goal
             let selectedGoal = null;
@@ -73,29 +74,32 @@
             goalForm.style.display = "block";
             leaderboard.style.display = "block";
 
-            // Add an event listener to the form
-            if (selectedGoal == null){
-                carbonGoalForm.addEventListener("submit", function (event) {
-                    event.preventDefault(); // Prevent form submission
+            setGoalButton.addEventListener("click", async () => {
+                console.log("weewoo")
+                const goal = parseFloat(carbonGoalSelect.value);
 
-                    // Get the selected goal from the dropdown
-                    selectedGoal = carbonGoalSelect.value;
+                // Send a request to update the user's goal
+                const response = await fetch('../routes/update-goal', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(goal),
+                });
 
-                    // Display the selected goal in the goal message div
-                    showGoals();
+                if (response.ok) {
+                    // Update the selected goal text and hide the form
+                    console.log("weeaawee")
+                    selectedGoal = goal;
                     selectedGoalText.textContent = `Your Carbon Emissions Goal: ${selectedGoal} tons`;
-                    
-                    // Hide the goal form and show the goal message
+                    console.log(`Your Carbon Emissions Goal: ${selectedGoal} tons`)
                     goalForm.style.display = "none";
                     goalMessage.style.display = "block";
-                });
-            } else {
-                event.preventDefault();
-                
-                goalForm.style.display = "none";
-                goalMessage.style.display = "block";
-                selectedGoalText.textContent = `Your Carbon Emissions Goal: ${selectedGoal} tons`;
-            }
+                } else {
+                    console.log(response)
+                    console.error('Failed to update the goal');
+                }
+            });
 
             // Sample data for the leaderboard (replace this with actual data)
             const leaderboardData = [
