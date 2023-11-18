@@ -1,13 +1,19 @@
 const express = require("express");
 const app = express();
+const cors = require('cors');
+
 const mongoose = require("mongoose");
 const multer = require("multer");
 const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
+const addCarbonDataRoute = require('./routes/addCarbonData');
 const keys = require('../landing_Page/config/keys');
 const router = express.Router();
 const path = require("path");
+
+// Enable CORS for all requests
+app.use(cors());
 
 
 mongoose.connect(
@@ -44,10 +50,16 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
   }
 });
 
+
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
+app.use('/addCarbonData', addCarbonDataRoute);
+
 
 app.listen(8800, () => {
   console.log("Backend server is running!");
 });
+
+
+module.exports = router;

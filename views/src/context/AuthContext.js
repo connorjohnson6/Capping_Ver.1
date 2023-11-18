@@ -6,12 +6,26 @@ const INITIAL_STATE = {
     _id: "6531e9b57814ff9f8562f6f1",
     username: "Connor Johnson",
     email: "connorjohnson211@gmail.com",
-    profilePicture: "person/1.jpeg",
+    profilePicture: "person/noAvatar.png",
     coverPicture: "",
     isAdmin: false,
     followers: [],
     followings: [],
   },
+
+
+  // user:{
+  //   _id: "6532e7b10f74809a7b67ae9e",
+  //   username: "Marist Team",
+  //   email: "maristcapping2024@gmail.com",
+  //   profilePicture: "person/noAvatar.png",
+  //   coverPicture: "",
+  //   isAdmin: false,
+  //   followers: [],
+  //   followings: [],
+  // },
+
+
   isFetching: false,
   error: false,
 };

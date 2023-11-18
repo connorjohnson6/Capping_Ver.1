@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const authRoutes = require('./landing_Page/routes/auth-routes');
 const profileRoutes = require('./landing_Page/routes/profile-routes');
 const passportSetup = require('./landing_Page/config/passport-setup'); //do not delete variable
@@ -17,7 +18,6 @@ const path = require('path');
 const app = express();
 const port = 3000
 
-const cors = require('cors');
 app.use(cors());
 
 

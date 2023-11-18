@@ -1,18 +1,31 @@
 import "./rightbar.css";
-import { Users } from "../../dummyData";
 import Online from "../online/Online";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
-export default function Rightbar({ user }) {
+export default function Rightbar({ user, pageType, emissionsData }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friends, setFriends] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
   const [followed, setFollowed] = useState(
-    currentUser.followings.includes(user?.id)
+    currentUser && currentUser.followings ? currentUser.followings.includes(user?.id) : false
   );
+
+  const handleAddRoute = async (data) => {
+    const userId = currentUser._id;
+    const co2E = data.co2e;
+
+    try {
+      await axios.post(process.env.REACT_APP_BACKEND_URL_CARBON, { userId, co2E });
+      console.log('Route added successfully');
+    } catch (error) {
+      console.error('Error adding route:', error);
+    }
+  };
+
+
 
   useEffect(() => {
     const getFriends = async () => {
@@ -48,15 +61,15 @@ export default function Rightbar({ user }) {
     return (
       <>
         <div className="birthdayContainer">
-          <img className="birthdayImg" src="assets/gift.png" alt="" />
-          <span className="birthdayText">
-            <b>Pola Foster</b> and <b>3 other friends</b> have a birhday today.
+          <img className="goalImg" src="assets/celebration.png" alt="" />
+          <span className="goalText">
+            <b>Pola Foster</b> and <b>3 other friends</b> have completed their goals for the month!
           </span>
         </div>
-        <img className="rightbarAd" src="assets/ad.png" alt="" />
+        <img className="rightbarAd" src="assets/ad1.png" alt="" />
         <h4 className="rightbarTitle">Online Friends</h4>
         <ul className="rightbarFriendList">
-          {Users.map((u) => (
+          {friends.map((u) => (
             <Online key={u.id} user={u} />
           ))}
         </ul>
@@ -84,16 +97,7 @@ export default function Rightbar({ user }) {
             <span className="rightbarInfoKey">From:</span>
             <span className="rightbarInfoValue">{user.from}</span>
           </div>
-          <div className="rightbarInfoItem">
-            <span className="rightbarInfoKey">Relationship:</span>
-            <span className="rightbarInfoValue">
-              {user.relationship === 1
-                ? "Single"
-                : user.relationship === 1
-                ? "Married"
-                : "-"}
-            </span>
-          </div>
+        
         </div>
         <h4 className="rightbarTitle">User friends</h4>
         <div className="rightbarFollowings">
@@ -120,10 +124,58 @@ export default function Rightbar({ user }) {
       </>
     );
   };
+
+  const CalculationsRightbar = ({ emissionsData }) => {
+    if (!emissionsData.length) {
+      return <div>No route calculations yet.</div>;
+    }
+  
+    return (
+      <>
+        <h4 className="rightbarTitle">Emissions Data</h4>
+        {emissionsData.map((data, index) => (
+          <div key={index} style={{ marginBottom: "20px", borderBottom: "1px solid #ccc", paddingBottom: "10px" }}>
+            <div style={{ fontWeight: "bold" }}>Route #{index + 1}</div>
+            <div>Method: {data.method}</div> 
+            <div>Origin: {data.origin.name}</div>
+            <div>Destination: {data.destination.name}</div>
+            <div>Direct Emissions: {data.direct_emissions.co2e} {data.direct_emissions.co2e_unit}</div>
+            <div>Indirect Emissions: {data.indirect_emissions.co2e} {data.indirect_emissions.co2e_unit}</div>
+
+            <button 
+              onClick={() => handleAddRoute(data)} 
+              style={{ backgroundColor: "#38a169", color: "white", padding: "10px 15px", border: "none", borderRadius: "5px", cursor: "pointer", marginTop: "10px" }}>
+              Add Route
+            </button>
+            
+          </div>
+        ))}
+      </>
+    );
+  };
+  
+  
+  
+  
+
+
+  
+
+  // Determine which Rightbar to display
+  const renderRightBar = () => {
+    if (pageType === "calculations") {
+      return <CalculationsRightbar emissionsData={emissionsData} />;
+    } else if (user) {
+      return <ProfileRightbar />;
+    } else {
+      return <HomeRightbar />;
+    }
+  };
+
   return (
     <div className="rightbar">
       <div className="rightbarWrapper">
-        {user ? <ProfileRightbar /> : <HomeRightbar />}
+        {renderRightBar()}
       </div>
     </div>
   );

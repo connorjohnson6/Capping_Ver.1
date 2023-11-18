@@ -76,16 +76,8 @@ export default function Share() {
                             />
                         </label>
                         <div className="shareOption">
-                            <span style={{ color: 'blue' }} className="material-symbols-outlined shareIcon">label</span>
-                            <span className="shareOptionText">Tag</span>
-                        </div>
-                        <div className="shareOption">
                             <span style={{ color: 'green' }} className="material-symbols-outlined shareIcon">location_on</span>
                             <span className="shareOptionText">Location</span>
-                        </div>
-                        <div className="shareOption">
-                            <span style={{ color: 'goldenrod' }} className="material-symbols-outlined shareIcon">mood</span>
-                            <span className="shareOptionText">Feelings</span>
                         </div>
                     </div>
                     <button className="shareButton" type="submit">Share</button>

@@ -64,12 +64,6 @@ export default function Post({ post }) {
                     <div className="postBottomLeft">
                         <img
                         className="likeIcon"
-                        src={`${PF}like.png`}
-                        onClick={likeHandler}
-                        alt=""
-                        />
-                        <img
-                        className="likeIcon"
                         src={`${PF}heart.png`}
                         onClick={likeHandler}
                         alt=""

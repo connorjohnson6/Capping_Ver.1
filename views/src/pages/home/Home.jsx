@@ -10,8 +10,8 @@ export default function Home() {
       <Topbar />
       <div className="homeContainer">
         <Sidebar />
-        <Feed/>
-        <Rightbar/>
+        <Feed />
+        <Rightbar pageType="home" />
       </div>
     </>
   );

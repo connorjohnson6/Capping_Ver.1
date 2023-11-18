@@ -3,6 +3,7 @@ import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
 import Register from "./pages/register/Register";
+import Calculator from "./pages/calculator/Calculator";
 import {
   BrowserRouter as Router,
   Route,
@@ -21,6 +22,7 @@ function App() {
         <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
         <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />
         <Route path="/profile/:username" element={<Profile />} />
+        <Route path="/calculator/:username" element={<Calculator />} />
       </Routes>
     </Router>
   );

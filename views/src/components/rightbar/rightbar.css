@@ -11,13 +11,13 @@
   align-items: center;
 }
 
-.birthdayImg {
+.goalImg {
   width: 40px;
   height: 40px;
   margin-right: 10px;
 }
 
-.birthdayText {
+.goalText {
   font-weight: 300;
   font-size: 15px;
 }
