@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const keys = require('./landing_Page/config/keys');
 const usersRoutes = require('./client_Page/routes/users-routes');
 const postRoutes = require('./client_Page/routes/posts-routes');
+const goalRoutes = require('./landing_Page/routes/update-goal');
 const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
@@ -66,6 +67,7 @@ app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
 app.use('/users', usersRoutes);
 app.use('/posts', postRoutes);
+app.use('/routes', goalRoutes);
 
 
 // Navigation
@@ -74,7 +76,7 @@ app.get('', (req, res) => {
 });
 
 //blog tab
-app.get('/goals', (req, res) =>{
+app.get('/auth/goals', (req, res) =>{
     res.render('goals')
 })
 

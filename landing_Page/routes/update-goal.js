@@ -1,18 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const Goals = require('../models/goals-model'); // Import your 'goals' model
+const Goals = require('../models/user-model'); 
 
-router.post('/api/update-goal', async (req, res) => {
+router.post('/update-goal', async (req, res) => {
     //const userId = req.user._id; // Assuming you have user authentication
-    console.log("woowaa")
     const goal  = req.body;
-    console.log(goal)
+   
+    const userId = req.user._id;
     
     try {
-        // Update the user's goal in the 'goals' collection
-        const updatedGoal = await Goals.findOneAndUpdate(
-            //{ userId },
-            { goal, progress: 0 },
+        const updatedGoal = await Goals.findOneAndUpdate(-
+            { _id: userId },
+            { goal: goal.goal },
+            {progress: 0 },
             { new: true, upsert: true }
         );
 
@@ -20,6 +20,18 @@ router.post('/api/update-goal', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, error: 'Failed to update the goal' });
+    }
+});
+
+router.get('/leaderboard', async (req, res) => {
+    try {
+        // Assuming you have a Goals model with 'username' and 'progress' fields
+        const leaderboardData = await Goals.find({}, 'username progress').sort({ progress: -1 });
+
+        res.json(leaderboardData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to retrieve leaderboard data' });
     }
 });
 

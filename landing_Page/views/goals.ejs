@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-        <link rel="stylesheet" href="styles/goals.css">
+        <link rel="stylesheet" href="/styles/goals.css">
         <title>Carbon Emissions Goals</title>
     </head>
     <%- include ("./partials/header"); %>
@@ -74,63 +74,55 @@
             goalForm.style.display = "block";
             leaderboard.style.display = "block";
 
-            setGoalButton.addEventListener("click", async () => {
-                console.log("weewoo")
+            setGoalButton.addEventListener('click', async () => {
                 const goal = parseFloat(carbonGoalSelect.value);
 
                 // Send a request to update the user's goal
-                const response = await fetch('../routes/update-goal', {
+                const response = await fetch('/routes/update-goal', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(goal),
+                    body: JSON.stringify({ goal }),
                 });
 
                 if (response.ok) {
                     // Update the selected goal text and hide the form
-                    console.log("weeaawee")
                     selectedGoal = goal;
                     selectedGoalText.textContent = `Your Carbon Emissions Goal: ${selectedGoal} tons`;
-                    console.log(`Your Carbon Emissions Goal: ${selectedGoal} tons`)
-                    goalForm.style.display = "none";
-                    goalMessage.style.display = "block";
+                    console.log(`Your Carbon Emissions Goal: ${selectedGoal} tons`);
+                    goalForm.style.display = 'none';
+                    goalMessage.style.display = 'block';
+
+                    // Refresh the leaderboard after setting the goal
+                    populateLeaderboard();
                 } else {
-                    console.log(response)
                     console.error('Failed to update the goal');
                 }
             });
 
-            // Sample data for the leaderboard (replace this with actual data)
-            const leaderboardData = [
-                { username: "User1", progress: 25 },
-                { username: "User2", progress: 50 },
-                { username: "User3", progress: 75 },
-                { username: "User4", progress: 100 },
-                { username: "User5", progress: 32 },
-                { username: "User6", progress: 57 },
-            ];
-
-            // Sort the leaderboard data by completion percentage (progress)
-            leaderboardData.sort((a, b) => b.progress - a.progress);
-
             // Function to populate the leaderboard
-            function populateLeaderboard() {
-                const leaderboardBody = document.getElementById("leaderboard-body");
+            async function populateLeaderboard() {
+            const leaderboardBody = document.getElementById('leaderboard-body');
+
+            try {
+                // Fetch data from the server
+                const response = await fetch('/routes/leaderboard');
+                const leaderboardData = await response.json();
 
                 // Clear the existing content
-                leaderboardBody.innerHTML = "";
+                leaderboardBody.innerHTML = '';
 
-                // Loop through the sorted leaderboard data and create rows
+                // Loop through the retrieved leaderboard data and create rows
                 leaderboardData.forEach((user) => {
-                    const row = document.createElement("tr");
+                    const row = document.createElement('tr');
 
                     // Create username cell
-                    const usernameCell = document.createElement("td");
+                    const usernameCell = document.createElement('td');
                     usernameCell.textContent = user.username;
 
                     // Create progress cell
-                    const progressCell = document.createElement("td");
+                    const progressCell = document.createElement('td');
                     progressCell.textContent = `${user.progress}%`;
 
                     // Append cells to the row
@@ -140,10 +132,14 @@
                     // Append the row to the leaderboard body
                     leaderboardBody.appendChild(row);
                 });
+            } catch (error) {
+                console.error(error);
+                // Handle error, display a message, or take appropriate action
             }
+        }
 
-            // Call the function to initially populate the leaderboard
-            populateLeaderboard();
+        // Call the function to initially populate the leaderboard
+        populateLeaderboard();
 
         </script>
     </body>

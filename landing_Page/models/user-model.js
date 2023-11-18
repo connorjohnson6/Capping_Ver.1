@@ -38,6 +38,13 @@ const userSchema = new Schema({
     city: {
         type: String,
         max: 50
+    },
+    goal: {
+        type: String
+    },
+    progress: {
+        type: Number,
+        default: 0
     }
 
 },
