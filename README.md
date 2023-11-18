@@ -1,23 +1,26 @@
 # Capping_Ver.1
 
-/-- You do not need to do these instals, I am only keep records --/
+Here is the page that I am creating for my client side of the our Carbon Emissions page.
+I can see that react would be the way to go for real time updates especially if we are
+making a site based off of users
 
-npm init -y
+the best way to start this file is to follow this guide on how to properly
+clone a react page: https://itsjavascript.com/react-scripts-command-not-found#google_vignette
 
-npm i express ejs express express-ejs-layouts
+And if you don't know how to committ to a specifc branch here is a video just to do it properly:
+https://www.youtube.com/watch?v=Lf3DYRvCPFo
 
-npm i -D nodemon
+The way to start the react page after you follow the instructiosn is to make two terminals inside
+of VS code or whatever IDE you are using
 
-To run the application. start a new terminal and enter: 
-- npm run startDev.
-Will be hosting on port 3000
+you want to be inside of Capping_Ver.1 for both terminals
 
+Terminal 1 (MongoDB api call):
+cd api
+npm start
 
-npm install passport@0.5 passport-google-oauth20
-npm install mongoose
-npm install mongodb
-npm install cookie-session
-npm install express-flash express-session
-npm install body-parser
+Terminal 2 (React page):
+cd views
+npm start
 
-
+please refer to the google doc for the .env file and the keys.js file
