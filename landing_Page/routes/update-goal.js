@@ -3,16 +3,13 @@ const router = express.Router();
 const Goals = require('../models/user-model'); 
 
 router.post('/update-goal', async (req, res) => {
-    //const userId = req.user._id; // Assuming you have user authentication
-    const goal  = req.body;
-   
     const userId = req.user._id;
-    
+    const { goal } = req.body;
+
     try {
-        const updatedGoal = await Goals.findOneAndUpdate(-
+        const updatedGoal = await Goals.findOneAndUpdate(
             { _id: userId },
-            { goal: goal.goal },
-            {progress: 0 },
+            { $set: { goal: goal, progress: 0 } }, // Use $set to update specific fields
             { new: true, upsert: true }
         );
 
@@ -22,6 +19,7 @@ router.post('/update-goal', async (req, res) => {
         res.status(500).json({ success: false, error: 'Failed to update the goal' });
     }
 });
+
 
 router.get('/leaderboard', async (req, res) => {
     try {
