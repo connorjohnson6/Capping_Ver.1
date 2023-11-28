@@ -1,0 +1,145 @@
+.login {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginWrapper {
+  width: 70%;
+  height: 70%;
+  display: flex;
+}
+
+.loginLeft,
+.loginRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.loginLogo {
+  font-size: 50px;
+  font-weight: 800;
+  color: #1775ee;
+  margin-bottom: 10px;
+}
+
+.loginDesc {
+  font-size: 24px;
+}
+
+.loginBox{
+    height: 300px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.loginInput{
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid gray;
+    font-size: 18px;
+    padding-left: 20px;
+}
+
+.loginInput:focus{
+    outline: none;
+}
+
+.loginButton{
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    background-color: #1775ee;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.loginButton:focus{
+  outline: none;
+}
+
+.loginButton:disabled{
+  cursor: not-allowed;
+}
+
+.loginForgot{
+    text-align: center;
+    color: #1775ee;
+}
+
+.loginRegisterButton{
+    width: 60%;
+    align-self: center;
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    background-color: #42b72a;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.circular{
+  animation: rotate 2s linear infinite;
+  height: 100px;
+  position: relative;
+  width: 100px;
+}
+
+.path {
+  stroke-dasharray: 1,200;
+  stroke-dashoffset: 0;
+  stroke:#B6463A;
+  animation:
+   dash 1.5s ease-in-out infinite,
+   color 6s ease-in-out infinite
+  ;
+  stroke-linecap: round;
+}
+
+@keyframes rotate{
+ 100%{
+  transform: rotate(360deg);
+ }
+}
+@keyframes dash{
+ 0%{
+  stroke-dasharray: 1,200;
+  stroke-dashoffset: 0;
+ }
+ 50%{
+  stroke-dasharray: 89,200;
+  stroke-dashoffset: -35;
+ }
+ 100%{
+  stroke-dasharray: 89,200;
+  stroke-dashoffset: -124;
+ }
+}
+@keyframes color{
+  100%, 0%{
+    stroke: #d62d20;
+  }
+  40%{
+    stroke: #0057e7;
+  }
+  66%{
+    stroke: #008744;
+  }
+  80%, 90%{
+    stroke: #ffa700;
+  }
+}
+  
