@@ -48,10 +48,12 @@ export default function Sidebar(){
                         <span className="material-symbols-outlined" id="sidebarIcon">event</span>
                         <span className="sidebarListItemText">Events</span>
                     </li>
-                    <li className="sidebarListItem">
-                        <span className="material-symbols-outlined" id="sidebarIcon">task_alt</span>
-                        <span className="sidebarListItemText">Goals</span>
-                    </li>
+                    <Link to={`/goals/${user.username}`}>
+                        <li className="sidebarListItem">
+                            <span className="material-symbols-outlined" id="sidebarIcon">task_alt</span>
+                            <span className="sidebarListItemText">Goals</span>
+                        </li>
+                    </Link>
                     </ul>
                     <button className="sidebarButton">Show More</button>
                     <hr className="sidebarHr" />

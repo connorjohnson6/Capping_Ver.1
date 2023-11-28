@@ -4,14 +4,18 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import { Avatar, VStack, HStack, Text, StackDivider } from '@chakra-ui/react';
+
 
 export default function Rightbar({ user, pageType, emissionsData }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friends, setFriends] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
+  const [isGoalSet, setIsGoalSet] = useState(false);
   const [followed, setFollowed] = useState(
     currentUser && currentUser.followings ? currentUser.followings.includes(user?.id) : false
   );
+
 
   const handleAddRoute = async (data) => {
     const userId = currentUser._id;
@@ -25,7 +29,20 @@ export default function Rightbar({ user, pageType, emissionsData }) {
     }
   };
 
-
+  useEffect(() => {
+    const checkUserGoal = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL_GOALS}/checkGoal/${currentUser._id}`);
+        setIsGoalSet(response.data.hasGoal);
+      } catch (error) {
+        console.error('Error checking goal:', error);
+      }
+    };
+  
+    if (currentUser && currentUser._id) {
+      checkUserGoal();
+    }
+  }, [currentUser]);
 
   useEffect(() => {
     const getFriends = async () => {
@@ -153,7 +170,60 @@ export default function Rightbar({ user, pageType, emissionsData }) {
       </>
     );
   };
+
+
+  const GoalsRightbar = () => {
+    const [usersGoals, setUsersGoals] = useState([]);
   
+    useEffect(() => {
+      const fetchUsersGoals = async () => {
+        const url = `${process.env.REACT_APP_BACKEND_URL}/api/users/allUsersGoals`;
+        console.log('Fetching from:', url); // This should log the full URL
+        try {
+          const response = await axios.get(url);
+          console.log("Received Users Goals Data:", response.data); // Log the received data
+          setUsersGoals(response.data);
+        } catch (error) {
+          console.error('Error fetching users goals:', error); // Log any errors that occur during fetching
+        }
+      };
+    
+      fetchUsersGoals();
+    }, []);
+  
+    if (!isGoalSet) {
+      return <div>Set a goal to see the leaderboard.</div>;
+    }
+  
+    return (
+      <VStack
+        divider={<StackDivider borderColor="gray.200" />}
+        spacing={4}
+        align="stretch"
+      >
+        {usersGoals.map((user, index) => {
+          console.log("Rendering user:", user.username); 
+
+          return (
+            <HStack key={index} p={4} justify="space-between" align="center">
+              <HStack spacing={4}>
+                {/* <Avatar src={user.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.png"} name={user.username} /> */}
+                <Avatar src={user.profilePicture } name={user.username} />
+
+                <VStack align="start" spacing={1}>
+                  <Text fontWeight="bold">{user.username}</Text>
+                  <Text fontSize="sm">{user.city}</Text>
+                </VStack>
+              </HStack>
+              <Text fontWeight="semibold">
+                {user.goal ? user.goal : 'No goal set'}
+              </Text>       
+            </HStack>
+          );
+        })}
+      </VStack>
+    );
+  };
   
   
   
@@ -162,9 +232,24 @@ export default function Rightbar({ user, pageType, emissionsData }) {
   
 
   // Determine which Rightbar to display
+  // const renderRightBar = () => {
+  //   switch (pageType) {
+  //     case "calculations":
+  //       return <CalculationsRightbar emissionsData={emissionsData} />;
+  //     case "goals":
+  //       return <GoalsRightbar />;
+  //     case "profile":
+  //       return user ? <ProfileRightbar /> : <HomeRightbar />;
+  //     default:
+  //       return <HomeRightbar />;
+  //   }
+  // };
+
   const renderRightBar = () => {
     if (pageType === "calculations") {
       return <CalculationsRightbar emissionsData={emissionsData} />;
+    } else if (pageType === "goals") {
+      return <GoalsRightbar />;
     } else if (user) {
       return <ProfileRightbar />;
     } else {

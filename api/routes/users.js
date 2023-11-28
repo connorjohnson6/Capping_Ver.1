@@ -1,4 +1,5 @@
 const User = require('../models/user-model');
+const Goal = require('../models/goal-model'); 
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 
@@ -118,5 +119,38 @@ router.put("/:id/unfollow", async (req, res) => {
     res.status(403).json("you cant unfollow yourself");
   }
 });
+
+router.get('/allUsersGoals', async (req, res) => {
+  try {
+    const usersWithGoals = await User.aggregate([
+      {
+        $lookup: {
+          from: "goals", // This should be the name of the collection where goals are stored
+          localField: "_id", // The common field in the User collection
+          foreignField: "userId", // The common field in the Goal collection (stored as ObjectId)
+          as: "goals"
+        }
+      },
+      {
+        $project: {
+          username: 1,
+          profilePicture: 1,
+          city: 1,
+          "goals.goal": 1 // Only project the goal field from the goals
+        }
+      }
+      
+    ]);
+
+    
+
+    console.log("Aggregated Users with Goals:", usersWithGoals); // Log the result of the aggregation
+    res.json(usersWithGoals);
+  } catch (error) {
+    console.error("Error in /allUsersGoals route:", error); // Log any errors
+    res.status(500).send('Server error');
+  }
+});
+
 
 module.exports = router;

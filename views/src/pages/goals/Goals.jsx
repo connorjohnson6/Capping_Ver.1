@@ -1,24 +1,27 @@
+import React from 'react';
 import Topbar from "../../components/topbar/Topbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
+import SetGoal from '../../components/setGoal/SetGoal';
 import { ChakraProvider } from "@chakra-ui/react";
 
-import "./home.css"
 
-export default function Home() {
+
+import "./goals.css";
+
+function Goals() {
   return (
     <>
       <Topbar />
       <div className="homeContainer">
         <Sidebar />
         <ChakraProvider>
-
-        <Feed />
+        <SetGoal />
         </ChakraProvider>
-
-        <Rightbar pageType="home" />
+        <Rightbar pageType="goals"/>
       </div>
     </>
   );
 }
+
+export default Goals;

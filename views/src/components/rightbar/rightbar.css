@@ -75,9 +75,13 @@
   cursor: pointer;
 }
 
-.rightbarFollowingImg{
-  width: 100px;
-  height: 100px;
+.rightbarFollowingImg {
+  /* If you don't need this class to style other images, you can comment it out or remove it. */
+  /* width: 100px; */
+  /* height: 100px; */
+  /* Or adjust the size as needed, for example: */
+  width: 50px;
+  height: 50px;
   object-fit: cover;
   border-radius: 5px;
 }

@@ -8,6 +8,7 @@ const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
 const addCarbonDataRoute = require('./routes/addCarbonData');
+const goalRoute = require("./routes/addGoals");
 const keys = require('../landing_Page/config/keys');
 const router = express.Router();
 const path = require("path");
@@ -55,6 +56,8 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use('/addCarbonData', addCarbonDataRoute);
+app.use('/addGoals', goalRoute);
+
 
 
 app.listen(8800, () => {
