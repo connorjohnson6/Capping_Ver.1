@@ -94,3 +94,29 @@
   object-fit: cover;
   cursor: pointer;
 }
+
+.topbarCenter .searchbar {
+  position: relative; /* This makes the searchbar a positioning context for suggestions */
+}
+
+.searchSuggestions {
+  position: absolute;
+  top: 100%; /* Position it right below the search bar */
+  left: 0;
+  width: 100%; /* Match the width of the search bar */
+  background: white;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  z-index: 1; /* To ensure it appears above other content */
+}
+
+.searchSuggestionItem {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.searchSuggestionItem:hover {
+  background-color: #f0f0f0;
+}

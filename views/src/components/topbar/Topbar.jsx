@@ -1,11 +1,33 @@
-import "./topbar.css"
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-   
+import axios from "axios";
+import "./topbar.css";
+
+
 export default function Topbar() {
     const { user } = useContext(AuthContext);
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const [searchTerm, setSearchTerm] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+
+    useEffect(() => {
+        if (searchTerm) {
+            const loadUsers = async () => {
+                try {
+                    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/users/search?name=${searchTerm}`);
+                    setSuggestions(response.data);
+                } catch (error) {
+                    console.error("Error fetching users:", error);
+                }
+            };
+            loadUsers();
+        } else {
+            setSuggestions([]);
+        }
+    }, [searchTerm]);
+
+
     return (
         
         <div className="topbarContainer">
@@ -18,7 +40,23 @@ export default function Topbar() {
             <div className="topbarCenter">
                 <div className="searchbar">
                     <span className="material-symbols-outlined" id="searchIcon">search</span>
-                    <input placeholder="Search for friend, post or video" className="searchInput" />
+                    <input 
+                        placeholder="Search for friend, post or video" 
+                        className="searchInput"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    {suggestions.length > 0 && (
+                        <div className="searchSuggestions">
+                            {suggestions.map((suggestion) => (
+                                <Link key={suggestion._id} to={`/profile/${suggestion.username}`}>
+                                    <div className="searchSuggestionItem">
+                                        {suggestion.username}
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
             <div className="topbarRight">
