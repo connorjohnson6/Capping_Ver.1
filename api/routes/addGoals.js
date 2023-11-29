@@ -4,16 +4,34 @@ const GoalModel = require('../models/goal-model');
 
 // POST route to set a new goal
 router.post('/', async (req, res) => {
-  const { userId, goal } = req.body;
+  const { userId, goal, unit } = req.body; // Include unit in the destructuring
 
   try {
     const newGoal = new GoalModel({
       userId,
-      goal
+      goal,
+      unit // Save the unit as well
     });
 
     const savedData = await newGoal.save();
     res.status(200).json(savedData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// PUT route to update an existing goal
+router.put('/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { goal, unit } = req.body;
+
+  try {
+    const updatedGoal = await GoalModel.findOneAndUpdate(
+      { userId: userId },
+      { goal: goal, unit: unit },
+      { new: true }
+    );
+    res.status(200).json(updatedGoal);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

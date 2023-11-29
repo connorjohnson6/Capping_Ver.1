@@ -1,37 +1,39 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Flex, Input, Text, Select } from '@chakra-ui/react';
+import { Box, Button, Flex, Input, Text, Select, useToast } from '@chakra-ui/react';
 import { AuthContext } from '../../context/AuthContext';
 
 function SetGoal() {
   const [goal, setGoal] = useState('');
   const [unit, setUnit] = useState('kg');
   const [isGoalSet, setIsGoalSet] = useState(false);
+  const [currentEmissions, setCurrentEmissions] = useState(0); // Added state
   const { user: currentUser } = useContext(AuthContext);
+  const toast = useToast();
 
   useEffect(() => {
-    const checkUserGoal = async () => {
+    const fetchGoal = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL_GOALS}/checkGoal/${currentUser._id}`);
         if (response.data.hasGoal) {
           setIsGoalSet(true);
+          const goalDetails = await axios.get(`${process.env.REACT_APP_BACKEND_URL_GOALS}/${currentUser._id}`);
+          setGoal(goalDetails.data.goal);
+          setUnit(goalDetails.data.unit || 'kg');
+          setCurrentEmissions(goalDetails.data.emissions); // Assume the response includes emissions
         }
       } catch (error) {
-        console.error('Error checking goal:', error);
+        console.error('Error fetching goal:', error);
       }
     };
   
     if (currentUser && currentUser._id) {
-      checkUserGoal();
+      fetchGoal();
     }
   }, [currentUser]);
-  
 
   const handleGoalChange = (e) => {
-    const value = e.target.value;
-    if (!isNaN(value) && value >= 0) {
-      setGoal(value);
-    }
+    setGoal(e.target.value);
   };
 
   const handleUnitChange = (e) => {
@@ -41,25 +43,60 @@ function SetGoal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(process.env.REACT_APP_BACKEND_URL_GOALS, {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL_GOALS}`, {
         userId: currentUser._id,
-        goal: goal
+        goal: goal,
+        unit: unit
       });
-      setIsGoalSet(true); // Update state to reflect that the goal is now set
-      localStorage.setItem('goalSet', 'true'); // Set goal status in localStorage
+      setIsGoalSet(true);
+      setCurrentEmissions(response.data.emissions); // Assume the response includes emissions
     } catch (error) {
       console.error('Error setting goal:', error);
     }
   };
-  
 
-  if (isGoalSet) {
-    return <h1>New Page</h1>; 
-  }
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.put(`${process.env.REACT_APP_BACKEND_URL_GOALS}/${currentUser._id}`, {
+        goal: goal,
+        unit: unit
+      });
+      toast({
+        title: 'Goal updated.',
+        description: "Your goal has been successfully updated.",
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Error updating goal:', error);
+    }
+  };
+
+  const progress = currentEmissions && goal ? (currentEmissions / goal) * 100 : 0;
+
 
   return (
     <Flex direction="column" alignItems="center" m={4}>
-      <Text fontSize="xl" mb={4}>Enter Your Desired Carbon Emissions Goal</Text>
+      {isGoalSet ? (
+        <>
+          <Text fontSize="2xl" mb={2}>{currentUser.username}'s Goal</Text>
+          <Text fontSize="lg">Current Emissions: {currentEmissions}{unit}</Text>
+          <Text fontSize="lg" mb={4}>Goal: {goal}{unit}</Text>
+          <Box width="100%" bg="gray.200" rounded="md" mb={4}>
+            <Box width={`${progress}%`} bg="green.500" rounded="md" p={1}>
+              <Text fontSize="sm" textAlign="center" color="white">{progress.toFixed(0)}%</Text>
+            </Box>
+          </Box>
+          {/* Update goal form */}
+        </>
+      ) : (
+        <>
+          <Text fontSize="xl" mb={4}>Set Your Carbon Emissions Goal</Text>
+          {/* Set goal form */}
+        </>
+      )}
       <Box
         p={4}
         borderRadius='lg'
@@ -84,15 +121,16 @@ function SetGoal() {
           <Button 
             ml={4} 
             colorScheme='green'
-            onClick={handleSubmit}
+            onClick={isGoalSet ? handleUpdate : handleSubmit}
             minWidth="120px"
           >
-            Set Goal
+            {isGoalSet ? "Update Goal" : "Set Goal"}
           </Button>
         </Flex>
       </Box>
     </Flex>
   );
-}
+  }
+
 
 export default SetGoal;

@@ -1,5 +1,6 @@
 const User = require('../models/user-model');
 const Goal = require('../models/goal-model'); 
+const Carbon = require('../models/carbon-model'); 
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 
@@ -151,6 +152,17 @@ router.get('/allUsersGoals', async (req, res) => {
       }
       
     ]);
+
+  // Route to update user's progress
+  router.put('/updateProgress/:userId', async (req, res) => {
+    try {
+      await updateUserProgress(req.params.userId);
+      res.status(200).json({ message: 'User progress updated successfully' });
+    } catch (error) {
+      console.error('Error in /updateProgress route:', error);
+      res.status(500).json({ error: 'Error updating user progress' });
+    }
+  });
 
     
 

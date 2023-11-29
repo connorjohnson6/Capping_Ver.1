@@ -104,3 +104,19 @@
 .rightbarFollowButton:focus{
   outline: none;
 }
+
+.progress-container {
+  background-color: #e0e0de;
+  border-radius: 8px;
+  position: relative;
+  height: 20px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background-color: #4caf50;
+  height: 20px;
+  border-radius: 8px;
+  transition: width 0.4s ease-in-out;
+}

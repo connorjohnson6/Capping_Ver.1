@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { Avatar, VStack, HStack, Text, StackDivider } from '@chakra-ui/react';
+import {VStack, HStack, Text, StackDivider } from '@chakra-ui/react';
 
 
 export default function Rightbar({ user, pageType, emissionsData }) {
@@ -174,56 +174,99 @@ export default function Rightbar({ user, pageType, emissionsData }) {
 
   const GoalsRightbar = () => {
     const [usersGoals, setUsersGoals] = useState([]);
-  
+    const { user: currentUser } = useContext(AuthContext);
+    
     useEffect(() => {
-      const fetchUsersGoals = async () => {
-        const url = `${process.env.REACT_APP_BACKEND_URL}/api/users/allUsersGoals`;
-        console.log('Fetching from:', url); // This should log the full URL
+      const fetchUsersGoalsAndEmissions = async () => {
+        // Fetch the goals data
+        const goalsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/users/allUsersGoals`;
+        let usersWithGoals = [];
         try {
-          const response = await axios.get(url);
-          console.log("Received Users Goals Data:", response.data); // Log the received data
-          setUsersGoals(response.data);
+          const goalsResponse = await axios.get(goalsUrl);
+          usersWithGoals = goalsResponse.data;
+          console.log('Goals fetched:', usersWithGoals);
         } catch (error) {
-          console.error('Error fetching users goals:', error); // Log any errors that occur during fetching
+          console.error('Error fetching users goals:', error);
         }
+    
+        // Fetch emissions data for each user and calculate progress
+        const emissionsData = await Promise.all(
+          usersWithGoals.map(async (user) => {
+            try {
+              const carbonUrl = `${process.env.REACT_APP_BACKEND_URL_CARBON}/${user._id}`; // Adjust the URL as needed
+              const carbonResponse = await axios.get(carbonUrl);
+              console.log('Carbon data fetched:', carbonResponse.data);
+              return {
+                ...user,
+                totalCo2E: carbonResponse.data ? parseFloat(carbonResponse.data.totalCo2E.toString()) : 0,
+              };
+            } catch (error) {
+              console.error('Error fetching carbon data:', error);
+              return { ...user, totalCo2E: 0 }; // Default to 0 if there's no entry
+            }
+          })
+        );
+    
+        // Combine goals with emissions data and sort by progress
+        const sortedData = emissionsData.sort((a, b) => {
+          const progressA = calculateProgress(a.goal, a.totalCo2E);
+          const progressB = calculateProgress(b.goal, b.totalCo2E);
+          return progressB - progressA; // Sort by descending progress
+        });
+    
+        setUsersGoals(sortedData);
+        console.log('Updated users goals with emissions:', sortedData);
       };
     
-      fetchUsersGoals();
-    }, []);
+      if (currentUser && currentUser._id) {
+        fetchUsersGoalsAndEmissions();
+      }
+    }, [currentUser]);
+    
+    const calculateProgress = (goal, emissions) => {
+      const progress = goal > 0 ? (emissions / goal) * 100 : 0; // Calculates the percentage
+      console.log(`Progress for goal ${goal} and emissions ${emissions}:`, progress);
+      return progress;
+    };
   
     if (!isGoalSet) {
       return <div>Set a goal to see the leaderboard.</div>;
     }
   
     return (
-      <VStack
-        divider={<StackDivider borderColor="gray.200" />}
-        spacing={4}
-        align="stretch"
-      >
+      <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+        <Text fontWeight="bold" fontSize="2xl" alignSelf="center" p={4}>Others Goals </Text>
         {usersGoals.map((user, index) => {
-          console.log("Rendering user:", user.username); 
-
+          const progress = calculateProgress(user.goal, user.totalCo2E);
+  
           return (
             <HStack key={index} p={4} justify="space-between" align="center">
-              <HStack spacing={4}>
-                {/* <Avatar src={user.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.png"} name={user.username} /> */}
-                <Avatar src={user.profilePicture } name={user.username} />
-
-                <VStack align="start" spacing={1}>
-                  <Text fontWeight="bold">{user.username}</Text>
-                  <Text fontSize="sm">{user.city}</Text>
-                </VStack>
-              </HStack>
-              <Text fontWeight="semibold">
-                {user.goal ? user.goal : 'No goal set'}
-              </Text>       
+              <img
+                src={user.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.png"}
+                alt=""
+                className="rightbarFollowingImg"
+              />
+              <VStack align="start" spacing={1} width="100%">
+                <Text fontWeight="bold">{user.username}</Text>
+                <Text fontSize="sm">{user.city}</Text>
+                <Text fontWeight="semibold">
+                  Emissions: {user.totalCo2E} / Goal: {user.goal}
+                </Text>
+                <div className="progress-container">
+                  <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+                </div>
+                <Text fontSize="xs" color="gray.600">
+                  {progress.toFixed(0)}%
+                </Text>
+              </VStack>
             </HStack>
           );
         })}
       </VStack>
     );
   };
+  
+  
   
   
   
