@@ -1,3 +1,15 @@
+/**
+ * Express router for post-related operations.
+ *
+ * This router includes routes for creating, updating, deleting, liking/disliking posts,
+ * as well as retrieving specific posts, timeline posts, and all posts by a specific user.
+ * It uses the Post and User models for database operations.
+ *
+ * @fileoverview Routes for post operations in an Express application.
+ * @author [Connor Johnson]
+ */
+
+
 const router = require("express").Router();
 const Post = require("../models/post-model");
 const User = require("../models/user-model");

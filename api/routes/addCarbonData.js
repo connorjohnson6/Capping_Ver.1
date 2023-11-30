@@ -1,6 +1,16 @@
+/**
+ * Express router for carbon data management.
+ *
+ * This router handles the addition of new carbon emission data entries for users.
+ * It uses the CarbonModel to interact with the database, storing user-specific carbon emission data.
+ *
+ * @fileoverview Route for adding carbon data entries in an Express application.
+ * @author [Connor Johnson]
+ */
+
 const express = require('express');
 const router = express.Router();
-const CarbonModel = require('../models/carbon-model'); // Adjust the path as needed
+const CarbonModel = require('../models/carbon-model');
 
 // POST endpoint to add carbon data
 router.post('/', async (req, res) => {

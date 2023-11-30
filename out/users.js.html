@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: users.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: users.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Express router for user-related operations.
+ *
+ * This router handles various user operations such as updating user information, deleting users,
+ * retrieving user details, managing follow/unfollow actions, searching users, and aggregating users with goals.
+ * It uses models for users, goals, and carbon data, and includes middleware for hashing passwords.
+ *
+ * @fileoverview User operation routes for an Express application.
+ * @author [Connor Johnson]
+ */
+
+const User = require('../models/user-model');
+const Goal = require('../models/goal-model'); 
+const Carbon = require('../models/carbon-model'); 
+const router = require("express").Router();
+const bcrypt = require("bcrypt");
+
+//update user
+router.put("/:id", async (req, res) => {
+  if (req.body.userId === req.params.id || req.body.isAdmin) {
+    if (req.body.password) {
+      try {
+        const salt = await bcrypt.genSalt(10);
+        req.body.password = await bcrypt.hash(req.body.password, salt);
+      } catch (err) {
+        return res.status(500).json(err);
+      }
+    }
+    try {
+      const user = await User.findByIdAndUpdate(req.params.id, {
+        $set: req.body,
+      });
+      res.status(200).json("Account has been updated");
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  } else {
+    return res.status(403).json("You can update only your account!");
+  }
+});
+
+//delete user
+router.delete("/:id", async (req, res) => {
+  if (req.body.userId === req.params.id || req.body.isAdmin) {
+    try {
+      await User.findByIdAndDelete(req.params.id);
+      res.status(200).json("Account has been deleted");
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  } else {
+    return res.status(403).json("You can delete only your account!");
+  }
+});
+
+//get a user
+router.get("/", async (req, res) => {
+  const userId = req.query.userId;
+  const username = req.query.username;
+  try {
+    const user = userId
+      ? await User.findById(userId)
+      : await User.findOne({ username: username });
+    const { password, updatedAt, ...other } = user._doc;
+    res.status(200).json(other);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//get friends
+router.get("/friends/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const friends = await Promise.all(
+      user.followings.map((friendId) => {
+        return User.findById(friendId);
+      })
+    );
+    let friendList = [];
+    friends.map((friend) => {
+      const { _id, username, profilePicture } = friend;
+      friendList.push({ _id, username, profilePicture });
+    });
+    res.status(200).json(friendList)
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//follow a user
+
+router.put("/:id/follow", async (req, res) => {
+  if (req.body.userId !== req.params.id) {
+    try {
+      const user = await User.findById(req.params.id);
+      const currentUser = await User.findById(req.body.userId);
+      if (!user.followers.includes(req.body.userId)) {
+        await user.updateOne({ $push: { followers: req.body.userId } });
+        await currentUser.updateOne({ $push: { followings: req.params.id } });
+        res.status(200).json("user has been followed");
+      } else {
+        res.status(403).json("you already follow this user");
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  } else {
+    res.status(403).json("you cant follow yourself");
+  }
+});
+
+//unfollow a user
+
+router.put("/:id/unfollow", async (req, res) => {
+  if (req.body.userId !== req.params.id) {
+    try {
+      const user = await User.findById(req.params.id);
+      const currentUser = await User.findById(req.body.userId);
+      if (user.followers.includes(req.body.userId)) {
+        await user.updateOne({ $pull: { followers: req.body.userId } });
+        await currentUser.updateOne({ $pull: { followings: req.params.id } });
+        res.status(200).json("user has been unfollowed");
+      } else {
+        res.status(403).json("you dont follow this user");
+      }
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  } else {
+    res.status(403).json("you cant unfollow yourself");
+  }
+});
+
+// Search for users
+
+router.get('/search', async (req, res) => {
+  try {
+      const users = await User.find({ username: { $regex: req.query.name, $options: "i" }});
+      res.json(users);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+});
+
+// Get all users along with their goals
+
+router.get('/allUsersGoals', async (req, res) => {
+  try {
+    const usersWithGoals = await User.aggregate([
+      {
+        $lookup: {
+          from: "goals", // This should be the name of the collection where goals are stored
+          localField: "_id", // The common field in the User collection
+          foreignField: "userId", // The common field in the Goal collection (stored as ObjectId)
+          as: "goals"
+        }
+      },
+      {
+        $project: {
+          username: 1,
+          profilePicture: 1,
+          city: 1,
+          "goals.goal": 1 // Only project the goal field from the goals
+        }
+      }
+      
+    ]);
+
+  // Route to update user's progress
+  router.put('/updateProgress/:userId', async (req, res) => {
+    try {
+      await updateUserProgress(req.params.userId);
+      res.status(200).json({ message: 'User progress updated successfully' });
+    } catch (error) {
+      console.error('Error in /updateProgress route:', error);
+      res.status(500).json({ error: 'Error updating user progress' });
+    }
+  });
+
+    
+
+    console.log("Aggregated Users with Goals:", usersWithGoals); // Log the result of the aggregation
+    res.json(usersWithGoals);
+  } catch (error) {
+    console.error("Error in /allUsersGoals route:", error); // Log any errors
+    res.status(500).send('Server error');
+  }
+});
+
+
+module.exports = router;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Nov 29 2023 17:13:32 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

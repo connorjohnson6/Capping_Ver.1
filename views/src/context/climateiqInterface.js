@@ -1,5 +1,12 @@
 
-
+/**
+ * @fileoverview Module for querying transportation-related data from the ClimateIQ API.
+ *               Includes functions for retrieving data about driving, flying, and train travel.
+ *               Each function returns data such as CO2 emissions and distance for the specified journey.
+ *               Requires an API key set in the environment variables.
+ * 
+ * @author [Alex Hanys, Connor Johnson]
+ */
 const API_KEY = process.env.REACT_APP_CLIMATEIQ_API_KEY; //key found in internal shared doc.
 const travelURL = "https://beta4.api.climatiq.io/travel/distance";
 //https://www.climatiq.io/docs/api-reference/travel

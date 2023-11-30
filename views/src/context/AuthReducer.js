@@ -1,4 +1,19 @@
-const AuthReducer = (state, action) => {
+/**
+ * Reducer function for authentication-related state management.
+ *
+ * This reducer handles actions related to user authentication, such as login attempts,
+ * login success, login failures, as well as user follow and unfollow actions.
+ * It updates the state based on the action type and payload received.
+ *
+ * @param {object} state - The current state of the authentication-related data.
+ * @param {object} action - The action object that dictates how the state should change.
+ * @returns {object} The updated state after applying the action.
+ *
+ * @fileoverview Reducer function for managing authentication and user-related state changes.
+ * @author [Connor Johnson]
+ */
+
+ const AuthReducer = (state, action) => {
   switch (action.type) {
     case "LOGIN_START":
       return {
@@ -19,6 +34,7 @@ const AuthReducer = (state, action) => {
         error: true,
       };
     case "FOLLOW":
+      // Adds a new user to the current user's followings list
       return {
         ...state,
         user: {
@@ -27,6 +43,7 @@ const AuthReducer = (state, action) => {
         },
       };
     case "UNFOLLOW":
+      // Removes a user from the current user's followings list
       return {
         ...state,
         user: {

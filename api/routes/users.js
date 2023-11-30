@@ -1,3 +1,14 @@
+/**
+ * Express router for user-related operations.
+ *
+ * This router handles various user operations such as updating user information, deleting users,
+ * retrieving user details, managing follow/unfollow actions, searching users, and aggregating users with goals.
+ * It uses models for users, goals, and carbon data, and includes middleware for hashing passwords.
+ *
+ * @fileoverview User operation routes for an Express application.
+ * @author [Connor Johnson]
+ */
+
 const User = require('../models/user-model');
 const Goal = require('../models/goal-model'); 
 const Carbon = require('../models/carbon-model'); 
@@ -121,6 +132,8 @@ router.put("/:id/unfollow", async (req, res) => {
   }
 });
 
+// Search for users
+
 router.get('/search', async (req, res) => {
   try {
       const users = await User.find({ username: { $regex: req.query.name, $options: "i" }});
@@ -130,6 +143,7 @@ router.get('/search', async (req, res) => {
   }
 });
 
+// Get all users along with their goals
 
 router.get('/allUsersGoals', async (req, res) => {
   try {

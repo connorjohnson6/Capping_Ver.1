@@ -1,3 +1,13 @@
+/**
+ * Express router for goal management operations.
+ *
+ * This router includes routes for setting new goals, updating existing goals, and checking if a goal
+ * exists for a specific user. It uses the GoalModel for database operations related to user goals.
+ *
+ * @fileoverview Routes for goal management in an Express application.
+ * @author [Connor Johnson]
+ */
+
 const express = require('express');
 const router = express.Router();
 const GoalModel = require('../models/goal-model'); 
@@ -36,6 +46,8 @@ router.put('/:userId', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// Check if a goal exists for a user
 
 router.get('/checkGoal/:userId', async (req, res) => {
   try {
