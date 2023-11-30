@@ -4,9 +4,6 @@ const profileRoutes = require('./landing_Page/routes/profile-routes');
 const passportSetup = require('./landing_Page/config/passport-setup'); //do not delete variable
 const mongoose = require('mongoose');
 const keys = require('./landing_Page/config/keys');
-const usersRoutes = require('./client_Page/routes/users-routes');
-const postRoutes = require('./client_Page/routes/posts-routes');
-const goalRoutes = require('./landing_Page/routes/update-goal');
 const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
@@ -65,9 +62,7 @@ app.use(express.json());
 // Set up routes
 app.use('/auth', authRoutes);
 app.use('/profile', profileRoutes);
-app.use('/users', usersRoutes);
-app.use('/posts', postRoutes);
-app.use('/routes', goalRoutes);
+
 
 
 // Navigation
@@ -100,10 +95,10 @@ app.get('/login', (req, res) =>{
     res.render('login')
 })
 
-// Handles any requests that don't match the ones above
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client_Page/build', 'index.html'));
-});
+// // Handles any requests that don't match the ones above
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'client_Page/build', 'index.html'));
+// });
 
 
 //404 page
