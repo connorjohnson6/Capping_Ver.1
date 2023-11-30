@@ -7,6 +7,10 @@
   list-style: none;
 }
 
+.navbar .active-link {
+  color: #73C482;
+}
+
 .logo-image {
   transition: transform .2s;
 }
@@ -39,7 +43,7 @@ body{
 
 /* Optional: Add hover effect */
 #login-button:hover {
-  color: #73C482;
+  color: var(--main-color);
 }
 
 header{
@@ -131,6 +135,8 @@ header{
   z-index: 10001;
   display: none;
 }
+
+
 
 @media (max-width: 1280px){
   header{

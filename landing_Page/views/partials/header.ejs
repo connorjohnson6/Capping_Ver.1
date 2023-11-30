@@ -9,10 +9,9 @@
   <a href="/" class="logo"><img src="/image/cappingLogo.png" alt="Logo" class="logo-image"></a>
 
   <ul class="navbar" id="navbar">
-    <li><a href="/" class="active">Home</a></li>
+    <li><a href="/">Home</a></li>
     <li><a href="/blog">Blog</a></li>
     <li><a href="/about">About us</a></li>
-    <li><a href="/goals">Goals</a></li>
     <li><a href="/products">Products</a></li>
   </ul>
 
@@ -26,27 +25,32 @@
 </header>
 
 <script>
-  let menu = document.querySelector("#menu-icon");
-  let navabr = document.querySelector(".navbar");
+  document.addEventListener('DOMContentLoaded', function() {
+    let menu = document.querySelector("#menu-icon");
+    let navbar = document.querySelector(".navbar");
 
-  menu.onclick = () =>{
-    menu.classList.toggle('bx-x');
-    navabr.classList.toggle('open');
-  }
-
-  if (window.location.pathname === '/login') {
-    var loginButton = document.getElementById('login-button');
-    var navButton = document.querySelector('.navbar');
-    if (loginButton) {
-      loginButton.style.visibility = 'hidden';
-      loginButton.style.pointerEvents = 'none';
+    menu.onclick = () => {
+        menu.classList.toggle('bx-x');
+        navbar.classList.toggle('open');
     }
 
-    if(navButton){
-      navButton.style.cssText = 'color: #fff !important';
-
+    // Hide login button on login page
+    if (window.location.pathname === '/login') {
+        var loginButton = document.getElementById('login-button');
+        if (loginButton) {
+            loginButton.style.visibility = 'hidden';
+            loginButton.style.pointerEvents = 'none';
+        }
     }
-  }
+
+    // Set active link based on current page
+    document.querySelectorAll('.navbar a').forEach(link => {
+        if (link.getAttribute('href') === window.location.pathname) {
+            link.classList.add('active-link');
+        }
+    });
+});
+
   
   </script>
 
