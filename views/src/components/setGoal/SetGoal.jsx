@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Flex, Input, Text, Select, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, Input, Text, Select, useToast, Image, VStack, useMediaQuery } from '@chakra-ui/react';
 import { AuthContext } from '../../context/AuthContext';
 
 function SetGoal() {
@@ -117,10 +117,50 @@ function SetGoal() {
 
   const progress = currentEmissions && goal ? (currentEmissions / goal) * 100 : 0;
 
+  const LearnMoreSection = () => {
+    return (
+      <Flex
+        direction={{ base: 'column', md: 'row' }} // Stack on small screens, side by side on medium screens and up
+        align="center" // Align items vertically
+        justify="space-between" // Space between the text and image
+        bg="gray.100"
+        p={5}
+        borderRadius="md"
+        boxShadow="md"
+        mt={10}
+        width="full"
+      >
+        <VStack
+          align="start" // Align text to the start
+          spacing={3} // Space between text and button
+          flex="1" // Take up full width available
+        >
+        <Text fontSize="xl" fontWeight="bold">Join the Eco-Challenge Movement</Text>
+        <Text>
+          Embark on a rewarding journey with our Eco-Challenge Series, designed to inspire and engage our community in reducing their carbon footprint. Each challenge is a step towards a more sustainable lifestyle, with practical actions that contribute to global conservation efforts. Accept a challenge today and become an advocate for change, making a real difference for our planet's future.
+        </Text>
+        <Button colorScheme="green">Learn More</Button>
+      </VStack>
+        <Box
+          flex="1" // Take up full width available
+          ml={{ base: 0, md: 5 }} // Margin left on medium screens and up
+          mt={{ base: 5, md: 0 }} // Margin top on small screens
+        >
+          <Image src="/assets/ad1.jpg" borderRadius="md" objectFit="cover" width="100%" height={{ md: "100%" }} /> {/* Replace with your actual image path */}
+        </Box>
+      </Flex>
+    );
+  };
 
   return (
-    <Flex direction="column" alignItems="center" m={4}>
-      {isGoalSet ? (
+      <Flex
+      direction="column"
+      alignItems="center"
+      m={4}
+      maxW="820px" // Maximum width of the main content area
+      width="100%" // Ensures it doesn't exceed the width of its parent
+    >      
+    {isGoalSet ? (
         <>
           <Text fontSize="2xl" mb={2}>{currentUser.username}'s Goal</Text>
           <Text fontSize="lg">Current Emissions: {parseFloat(currentEmissions).toFixed(2)}{unit}</Text>
@@ -169,7 +209,10 @@ function SetGoal() {
           </Button>
         </Flex>
       </Box>
+      <LearnMoreSection />
+
     </Flex>
+    
   );
   }
 
