@@ -30,6 +30,16 @@
      followers: [],
      followings: [],
    },
+
+    //   _id: "6569432b7a28128a16269a29",
+    //   username: "ahanys",
+    //   email: "abhmind@gmail.com",
+    //   profilePicture: "person/noAvatar.png",
+    //   coverPicture: "",
+    //   isAdmin: false,
+    //   followers: [],
+    //   followings: [],
+    // },
    isFetching: false,
    error: false,
  };

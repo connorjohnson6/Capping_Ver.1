@@ -6,6 +6,10 @@ import { AuthContext } from '../../context/AuthContext';
 function SetGoal() {
   const [goal, setGoal] = useState('');
   const [unit, setUnit] = useState('kg');
+
+  const [goalInput, setGoalInput] = useState(''); // State to hold the input value
+  const [currentGoal, setCurrentGoal] = useState(''); // State to hold the current goal
+
   const [isGoalSet, setIsGoalSet] = useState(false);
   const [currentEmissions, setCurrentEmissions] = useState(0); // Added state
   const { user: currentUser } = useContext(AuthContext);
@@ -18,9 +22,10 @@ function SetGoal() {
         if (response.data.hasGoal) {
           setIsGoalSet(true);
           const goalDetails = await axios.get(`${process.env.REACT_APP_BACKEND_URL_GOALS}/${currentUser._id}`);
-          setGoal(goalDetails.data.goal);
+          setGoalInput(goalDetails.data.goal); // Update the input state
+          setCurrentGoal(goalDetails.data.goal); // Update the current goal state
           setUnit(goalDetails.data.unit || 'kg');
-          setCurrentEmissions(goalDetails.data.emissions); // Assume the response includes emissions
+          setCurrentEmissions(goalDetails.data.emissions);
         }
       } catch (error) {
         console.error('Error fetching goal:', error);
@@ -32,8 +37,32 @@ function SetGoal() {
     }
   }, [currentUser]);
 
+  useEffect(() => {
+    const fetchUserGoalAndEmissions = async () => {
+      try {
+        // Assuming you have a backend route that gets both goal and emissions for a user
+        const url = `${process.env.REACT_APP_BACKEND_URL}/api/users/userGoalAndEmissions/${currentUser._id}`;
+        const response = await axios.get(url);
+  
+        if (response.data) {
+          const { goal, emissions } = response.data;
+          setIsGoalSet(goal ? true : false);
+          setGoal(goal || '');
+          setCurrentEmissions(emissions || 0);
+        }
+      } catch (error) {
+        console.error('Error fetching user goal and emissions:', error);
+      }
+    };
+  
+    if (currentUser && currentUser._id) {
+      fetchUserGoalAndEmissions();
+    }
+  }, [currentUser]);
+
+  // Only update the goal input on change, not the current goal
   const handleGoalChange = (e) => {
-    setGoal(e.target.value);
+    setGoalInput(e.target.value);
   };
 
   const handleUnitChange = (e) => {
@@ -45,23 +74,35 @@ function SetGoal() {
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL_GOALS}`, {
         userId: currentUser._id,
-        goal: goal,
+        goal: goalInput, // Change this line to use goalInput
         unit: unit
       });
       setIsGoalSet(true);
+      setCurrentGoal(goalInput); // Update the current goal state with the input
       setCurrentEmissions(response.data.emissions); // Assume the response includes emissions
+      setGoal(goalInput); // Also update the goal state to reflect the new goal
+      toast({
+        title: 'Goal set.',
+        description: "Your goal has been successfully set.",
+        status: 'success',
+        duration: 9000,
+        isClosable: true,
+      });
     } catch (error) {
       console.error('Error setting goal:', error);
     }
   };
 
+  // On submitting the update, set the current goal to the value of the input
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
       await axios.put(`${process.env.REACT_APP_BACKEND_URL_GOALS}/${currentUser._id}`, {
-        goal: goal,
+        goal: goalInput, // Use the input state for the request
         unit: unit
       });
+      setCurrentGoal(goalInput); // Update the current goal state
+      setGoal(goalInput); // Assuming you have a state variable named 'goal'
       toast({
         title: 'Goal updated.',
         description: "Your goal has been successfully updated.",
@@ -82,7 +123,7 @@ function SetGoal() {
       {isGoalSet ? (
         <>
           <Text fontSize="2xl" mb={2}>{currentUser.username}'s Goal</Text>
-          <Text fontSize="lg">Current Emissions: {currentEmissions}{unit}</Text>
+          <Text fontSize="lg">Current Emissions: {parseFloat(currentEmissions).toFixed(2)}{unit}</Text>
           <Text fontSize="lg" mb={4}>Goal: {goal}{unit}</Text>
           <Box width="100%" bg="gray.200" rounded="md" mb={4}>
             <Box width={`${progress}%`} bg="green.500" rounded="md" p={1}>
@@ -110,7 +151,7 @@ function SetGoal() {
           <Input 
             type='number' 
             placeholder='Enter your goal' 
-            value={goal} 
+            value={goalInput} // Use the input state for the input value
             onChange={handleGoalChange} 
             required
           />

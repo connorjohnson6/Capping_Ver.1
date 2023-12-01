@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import {VStack, HStack, Text, StackDivider } from '@chakra-ui/react';
+import {useToast, VStack, HStack, Text, StackDivider } from '@chakra-ui/react';
 
 
 export default function Rightbar({ user, pageType, emissionsData }) {
@@ -12,22 +12,12 @@ export default function Rightbar({ user, pageType, emissionsData }) {
   const [friends, setFriends] = useState([]);
   const { user: currentUser, dispatch } = useContext(AuthContext);
   const [isGoalSet, setIsGoalSet] = useState(false);
+  const toast = useToast();
+  const [addedRoutes, setAddedRoutes] = useState(new Set()); // Using a Set to store added route indexes
   const [followed, setFollowed] = useState(
     currentUser && currentUser.followings ? currentUser.followings.includes(user?.id) : false
   );
 
-
-  const handleAddRoute = async (data) => {
-    const userId = currentUser._id;
-    const co2E = data.co2e;
-
-    try {
-      await axios.post(process.env.REACT_APP_BACKEND_URL_CARBON, { userId, co2E });
-      console.log('Route added successfully');
-    } catch (error) {
-      console.error('Error adding route:', error);
-    }
-  };
 
   useEffect(() => {
     const checkUserGoal = async () => {
@@ -142,15 +132,46 @@ export default function Rightbar({ user, pageType, emissionsData }) {
     );
   };
 
+
+
+  const handleAddRoute = async (data, index) => {
+    const userId = currentUser._id;
+    const co2E = data.co2e;
+  
+    try {
+      await axios.post(process.env.REACT_APP_BACKEND_URL_CARBON, { userId, co2E });
+      console.log('Route added successfully');
+  
+      // Update the state to include the index of the added route
+      setAddedRoutes(prev => new Set(prev).add(index));
+  
+      // Provide feedback to the user
+      toast({
+        title: 'Success',
+        description: 'Route added to your profile.',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Error adding route:', error);
+    }
+  };
+  
+
   const CalculationsRightbar = ({ emissionsData }) => {
+
     if (!emissionsData.length) {
       return <div>No route calculations yet.</div>;
     }
   
     return (
       <>
-        <h4 className="rightbarTitle">Emissions Data</h4>
-        {emissionsData.map((data, index) => (
+      <h4 className="rightbarTitle">Emissions Data</h4>
+      {emissionsData.map((data, index) => {
+        if (addedRoutes.has(index)) return null; // Do not render routes that have been added
+
+        return (
           <div key={index} style={{ marginBottom: "20px", borderBottom: "1px solid #ccc", paddingBottom: "10px" }}>
             <div style={{ fontWeight: "bold" }}>Route #{index + 1}</div>
             <div>Method: {data.method}</div> 
@@ -160,13 +181,16 @@ export default function Rightbar({ user, pageType, emissionsData }) {
             <div>Indirect Emissions: {data.indirect_emissions.co2e} {data.indirect_emissions.co2e_unit}</div>
 
             <button 
-              onClick={() => handleAddRoute(data)} 
-              style={{ backgroundColor: "#38a169", color: "white", padding: "10px 15px", border: "none", borderRadius: "5px", cursor: "pointer", marginTop: "10px" }}>
+              onClick={() => handleAddRoute(data, index)} // Pass the index as well
+              style={{ backgroundColor: "#38a169", color: "white", padding: "10px 15px", border: "none", borderRadius: "5px", cursor: "pointer", marginTop: "10px" }}
+              disabled={addedRoutes.has(index)} // Disable the button if the route has been added
+            >
               Add Route
             </button>
             
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </>
     );
   };
@@ -178,44 +202,16 @@ export default function Rightbar({ user, pageType, emissionsData }) {
     
     useEffect(() => {
       const fetchUsersGoalsAndEmissions = async () => {
-        // Fetch the goals data
-        const goalsUrl = `${process.env.REACT_APP_BACKEND_URL}/api/users/allUsersGoals`;
-        let usersWithGoals = [];
+        const combinedUrl = `${process.env.REACT_APP_BACKEND_URL}/api/users/allUsersGoalsAndEmissions`;
+      
         try {
-          const goalsResponse = await axios.get(goalsUrl);
-          usersWithGoals = goalsResponse.data;
-          console.log('Goals fetched:', usersWithGoals);
+          const response = await axios.get(combinedUrl);
+          const combinedData = response.data;
+      
+          setUsersGoals(combinedData);
         } catch (error) {
-          console.error('Error fetching users goals:', error);
+          console.error('Error fetching combined users goals and emissions:', error);
         }
-    
-        // Fetch emissions data for each user and calculate progress
-        const emissionsData = await Promise.all(
-          usersWithGoals.map(async (user) => {
-            try {
-              const carbonUrl = `${process.env.REACT_APP_BACKEND_URL_CARBON}/${user._id}`; // Adjust the URL as needed
-              const carbonResponse = await axios.get(carbonUrl);
-              console.log('Carbon data fetched:', carbonResponse.data);
-              return {
-                ...user,
-                totalCo2E: carbonResponse.data ? parseFloat(carbonResponse.data.totalCo2E.toString()) : 0,
-              };
-            } catch (error) {
-              console.error('Error fetching carbon data:', error);
-              return { ...user, totalCo2E: 0 }; // Default to 0 if there's no entry
-            }
-          })
-        );
-    
-        // Combine goals with emissions data and sort by progress
-        const sortedData = emissionsData.sort((a, b) => {
-          const progressA = calculateProgress(a.goal, a.totalCo2E);
-          const progressB = calculateProgress(b.goal, b.totalCo2E);
-          return progressB - progressA; // Sort by descending progress
-        });
-    
-        setUsersGoals(sortedData);
-        console.log('Updated users goals with emissions:', sortedData);
       };
     
       if (currentUser && currentUser._id) {
@@ -250,7 +246,10 @@ export default function Rightbar({ user, pageType, emissionsData }) {
                 <Text fontWeight="bold">{user.username}</Text>
                 <Text fontSize="sm">{user.city}</Text>
                 <Text fontWeight="semibold">
-                  Emissions: {user.totalCo2E} / Goal: {user.goal}
+                  Emissions: {parseFloat(user.totalCo2E).toFixed(2)}
+                </Text>
+                <Text fontWeight="semibold">
+                  Goal: {user.goal}
                 </Text>
                 <div className="progress-container">
                   <div className="progress-bar" style={{ width: `${progress}%` }}></div>
@@ -265,7 +264,6 @@ export default function Rightbar({ user, pageType, emissionsData }) {
       </VStack>
     );
   };
-  
   
   
   

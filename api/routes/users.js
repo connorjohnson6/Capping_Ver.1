@@ -143,29 +143,53 @@ router.get('/search', async (req, res) => {
   }
 });
 
-// Get all users along with their goals
-
-router.get('/allUsersGoals', async (req, res) => {
+// Get all users along with their goals and total CO2 emissions
+router.get('/allUsersGoalsAndEmissions', async (req, res) => {
   try {
-    const usersWithGoals = await User.aggregate([
-      {
-        $lookup: {
-          from: "goals", // This should be the name of the collection where goals are stored
-          localField: "_id", // The common field in the User collection
-          foreignField: "userId", // The common field in the Goal collection (stored as ObjectId)
-          as: "goals"
-        }
-      },
-      {
-        $project: {
-          username: 1,
-          profilePicture: 1,
-          city: 1,
-          "goals.goal": 1 // Only project the goal field from the goals
-        }
-      }
+    const users = await User.find(); // Fetch all users
+    const usersWithGoalsAndEmissions = await Promise.all(users.map(async (user) => {
+      // Fetch goals for the user
+      const goals = await Goal.find({ userId: user._id });
+      // Fetch emissions for the user
+      const emissions = await Carbon.find({ userId: user._id });
       
-    ]);
+      // Calculate total emissions for the user
+      const totalEmissions = emissions.reduce((acc, emission) => acc + parseFloat(emission.totalCo2E), 0);
+
+      return {
+        ...user._doc, // Spread the user document
+        totalCo2E: totalEmissions, // Add the total emissions
+        goal: goals.length > 0 ? goals[0].goal : undefined // Add the first goal found
+      };
+    }));
+
+    res.json(usersWithGoalsAndEmissions);
+  } catch (error) {
+    console.error("Error in /allUsersGoalsAndEmissions route:", error);
+    res.status(500).send('Server error');
+  }
+});
+
+// Get goal and emissions for a specific user
+router.get('/userGoalAndEmissions/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const goalData = await Goal.findOne({ userId });
+    const emissionsData = await Carbon.find({ userId });
+    
+    // Calculate total emissions
+    const totalEmissions = emissionsData.reduce((acc, emission) => acc + emission.totalCo2E, 0);
+
+    res.json({
+      goal: goalData ? goalData.goal : null,
+      unit: goalData ? goalData.unit : 'kg', // Assuming 'kg' is your default unit
+      emissions: totalEmissions,
+    });
+  } catch (error) {
+    console.error("Error fetching user goal and emissions:", error);
+    res.status(500).send('Server error');
+  }
+});
 
   // Route to update user's progress
   router.put('/updateProgress/:userId', async (req, res) => {
@@ -177,16 +201,6 @@ router.get('/allUsersGoals', async (req, res) => {
       res.status(500).json({ error: 'Error updating user progress' });
     }
   });
-
-    
-
-    console.log("Aggregated Users with Goals:", usersWithGoals); // Log the result of the aggregation
-    res.json(usersWithGoals);
-  } catch (error) {
-    console.error("Error in /allUsersGoals route:", error); // Log any errors
-    res.status(500).send('Server error');
-  }
-});
 
 
 module.exports = router;
