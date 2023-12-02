@@ -170,6 +170,36 @@ router.get('/allUsersGoalsAndEmissions', async (req, res) => {
   }
 });
 
+
+//get just carbon data for user
+router.get('/userCarbons/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const emissionsData = await Carbon.find({ userId });
+    
+    console.log("emissionsData:");
+    console.log(JSON.stringify(emissionsData, null, 2)); // Using JSON.stringify for better visualization
+
+    if (!emissionsData || emissionsData.length === 0) {
+      return res.status(404).json({ message: 'Carbon data not found for the user.' });
+    }
+
+    // Assuming each document has a `routes` property
+    const userRoutes = emissionsData[0].routes.map(route => route.co2E);
+
+    console.log("now routes:");
+    console.log(JSON.stringify(userRoutes, null, 2)); // Using JSON.stringify for better visualization
+
+    res.json({
+      routes: userRoutes
+    });
+  } catch (error) {
+    console.error("Error fetching user emissions:", error);
+    res.status(500).send('Server error');
+  }
+});
+
+
 // Get goal and emissions for a specific user
 router.get('/userGoalAndEmissions/:userId', async (req, res) => {
   try {

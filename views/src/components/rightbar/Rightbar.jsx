@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import {useToast, VStack, HStack, Text, StackDivider } from '@chakra-ui/react';
+import {useToast, VStack, HStack, Text, StackDivider, Box } from '@chakra-ui/react';
 
 
 export default function Rightbar({ user, pageType, emissionsData }) {
@@ -14,6 +14,7 @@ export default function Rightbar({ user, pageType, emissionsData }) {
   const [isGoalSet, setIsGoalSet] = useState(false);
   const toast = useToast();
   const [addedRoutes, setAddedRoutes] = useState(new Set()); // Using a Set to store added route indexes
+  const [userRoutes, setUserRoutes] = useState([]);
   const [followed, setFollowed] = useState(
     currentUser && currentUser.followings ? currentUser.followings.includes(user?.id) : false
   );
@@ -45,6 +46,27 @@ export default function Rightbar({ user, pageType, emissionsData }) {
     };
     getFriends();
   }, [user]);
+
+  useEffect(()=>{
+    const getActivities = async () => {
+      try {
+        //const activities = await axios.get("/users/userCarbons/" + currentUser._id);
+        const url = `${process.env.REACT_APP_BACKEND_URL}/api/users/userCarbons/${currentUser._id}`;
+        const activities = await axios.get(url);
+        console.log("-------------------------------");
+        // Assuming activities.data.routes is your array of objects
+        const routesArray = activities.data.routes.map((route) => {//for whatever reason this is some how an array of characters so this weirdness is required
+          let charArray = Object.values(route["$numberDecimal"]);
+          let valueStr = charArray.join('');
+          return parseFloat(valueStr);
+        });
+        console.log(routesArray);
+
+        setUserRoutes(routesArray);
+      } catch(err){}
+    };
+    getActivities();
+  }, [currentUser]);
 
   const handleClick = async () => {
     try {
@@ -85,6 +107,7 @@ export default function Rightbar({ user, pageType, emissionsData }) {
   };
 
   const ProfileRightbar = () => {
+
     return (
       <>
         {user.username !== currentUser.username && (
@@ -126,6 +149,22 @@ export default function Rightbar({ user, pageType, emissionsData }) {
                 <span className="rightbarFollowingName">{friend.username}</span>
               </div>
             </Link>
+          ))}
+        </div>
+        <h4 className="rightbarTitle">Past Activities</h4>
+        <div className="rightbarFollowings">
+          {userRoutes.map((route) => (
+            <Box
+              p={4}
+              borderRadius="8"
+              bgColor='lightgrey'
+              shadow="base"
+              minW='container.md'
+              zIndex='1'
+              
+              mb={4}>
+                {route} kg CO2e
+            </Box>
           ))}
         </div>
       </>
