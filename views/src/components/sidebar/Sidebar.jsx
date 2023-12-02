@@ -23,10 +23,6 @@ export default function Sidebar(){
                         <span className="sidebarListItemText">Chats</span>
                     </li>
                     <li className="sidebarListItem">
-                        <span className="material-symbols-outlined" id="sidebarIcon">social_leaderboard</span>
-                        <span className="sidebarListItemText">Leaderboard</span>
-                    </li>
-                    <li className="sidebarListItem">
                         <span className="material-symbols-outlined" id="sidebarIcon">group</span>
                         <span className="sidebarListItemText">Groups</span>
                     </li>
@@ -34,6 +30,18 @@ export default function Sidebar(){
                         <span className="material-symbols-outlined" id="sidebarIcon">editor_choice</span>
                         <span className="sidebarListItemText">Badges</span>
                     </li>
+                    <Link to={`/leaderboard/${user.username}`}>
+                        <li className="sidebarListItem">
+                            <span className="material-symbols-outlined" id="sidebarIcon">social_leaderboard</span>
+                            <span className="sidebarListItemText">Leaderboard</span>
+                        </li>
+                    </Link>
+                    <Link to={`/green/${user.username}`}>
+                        <li className="sidebarListItem">
+                            <span className="material-symbols-outlined" id="sidebarIcon">compost</span>
+                            <span className="sidebarListItemText">Tips</span>
+                        </li>
+                    </Link>
                     <li className="sidebarListItem">
                         <span className="material-symbols-outlined" id="sidebarIcon">flag</span>
                         <span className="sidebarListItemText">Challenges</span>

@@ -120,3 +120,69 @@
   border-radius: 8px;
   transition: width 0.4s ease-in-out;
 }
+
+/* Adjust styles based on your design preferences */
+.leaderboard-container {
+  width: 100%;
+  max-width: 400px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.leaderboard-entry {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+  padding: 12px;
+}
+
+.leaderboard-entry-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.progress-container {
+  width: 100%;
+  height: 8px;
+  background-color: #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #4caf50; /* Green color */
+}
+
+/* Add these styles to your CSS */
+.rightbarContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Ensure the container takes the full height of its parent */
+  padding-left: 35px; /* Adjust the padding as needed */
+}
+
+.rightbarContent {
+  text-align: center;
+}
+
+.rightbarTitle {
+  background-color: #75c59f;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.rightbarFunFact {
+  background-color: #75c59f;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 10px;
+}

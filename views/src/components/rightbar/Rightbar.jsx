@@ -305,9 +305,110 @@ export default function Rightbar({ user, pageType, emissionsData }) {
   };
   
   
+  const LeaderboardRightbar = () => {
+    const [usersGoals, setUsersGoals] = useState([]);
+    const { user: currentUser } = useContext(AuthContext);
+  
+    useEffect(() => {
+      const fetchUsersGoalsAndEmissions = async () => {
+        const combinedUrl = `${process.env.REACT_APP_BACKEND_URL}/api/users/allUsersGoalsAndEmissions`;
+  
+        try {
+          const response = await axios.get(combinedUrl);
+          const combinedData = response.data;
+  
+          // Sort users based on progress (descending order)
+          const sortedUsers = combinedData.sort((a, b) => {
+            const progressA = a.goal > 0 ? (a.totalCo2E / a.goal) * 100 : 0;
+            const progressB = b.goal > 0 ? (b.totalCo2E / b.goal) * 100 : 0;
+            return progressB - progressA;
+          });
+  
+          setUsersGoals(sortedUsers);
+        } catch (error) {
+          console.error('Error fetching combined users goals and emissions:', error);
+        }
+      };
+  
+      if (currentUser && currentUser._id) {
+        fetchUsersGoalsAndEmissions();
+      }
+    }, [currentUser]);
+  
+    const calculateProgress = (goal, emissions) => {
+      const progress = goal > 0 ? (emissions / goal) * 100 : 0;
+      return progress;
+    };
+  
+    const calculateChallengesCompleted = (progress) => {
+      // Calculate the number of challenges completed based on every 10% progress
+      const challengesCompleted = Math.floor(progress / 10);
+      return challengesCompleted;
+    };
+  
+    return (
+      <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+        <Text fontWeight="bold" fontSize="2xl" alignSelf="center" p={4}>
+          Challenges Completed
+        </Text>
+        {usersGoals.map((user, index) => {
+          const progress = calculateProgress(user.goal, user.totalCo2E);
+          const challengesCompleted = calculateChallengesCompleted(progress);
+  
+          return (
+            <HStack key={index} p={4} justify="space-between" align="center">
+              <img
+                src={user.profilePicture ? PF + user.profilePicture : PF + 'person/noAvatar.png'}
+                alt=""
+                className="rightbarFollowingImg"
+              />
+              <VStack align="start" spacing={1} width="100%">
+                <Text fontWeight="bold">{user.username}</Text>
+                <Text fontSize="sm">{user.city}</Text>
+                <Text fontWeight="semibold">
+                  Challenges Completed: {challengesCompleted}
+                </Text>
+              </VStack>
+            </HStack>
+          );
+        })}
+      </VStack>
+    );
+  };
   
   
 
+  const GreenRightbar = () => {
+    const [funFacts, setFunFacts] = useState([
+      "Did you know that trees absorb carbon dioxide and release oxygen during photosynthesis?",
+      "One tree can absorb about 48 pounds of carbon dioxide per year.",
+      "The fashion industry contributes to carbon emissions; consider sustainable clothing options!",
+      // Add more fun facts as needed
+    ]);
+  
+    const [randomFact, setRandomFact] = useState("");
+  
+    useEffect(() => {
+      // Generate a random index to select a random fun fact
+      const randomIndex = Math.floor(Math.random() * funFacts.length);
+      setRandomFact(funFacts[randomIndex]);
+    }, [funFacts]);
+  
+    return (
+      <div className="rightbarContainer">
+        <div className="rightbarContent">
+          <h4 className="rightbarTitle">Did you know?</h4>
+          <p className="rightbarFunFact">{randomFact}</p>
+        </div>
+        <ul className="rightbarFriendList">
+          {/* Render online friends (assuming 'Online' component is defined) */}
+          {friends.map((u) => (
+            <Online key={u.id} user={u} />
+          ))}
+        </ul>
+      </div>
+    );
+  };
 
   
 
@@ -332,6 +433,11 @@ export default function Rightbar({ user, pageType, emissionsData }) {
       return <GoalsRightbar />;
     } else if (user) {
       return <ProfileRightbar />;
+    } else if (pageType=== "leaderboard"){
+      return <LeaderboardRightbar />;
+    } else if (pageType === "green") {
+      console.log("here")
+      return <GreenRightbar />;
     } else {
       return <HomeRightbar />;
     }
