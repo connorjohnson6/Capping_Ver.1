@@ -51,7 +51,7 @@ export default function Rightbar({ user, pageType, emissionsData }) {
     const getActivities = async () => {
       try {
         //const activities = await axios.get("/users/userCarbons/" + currentUser._id);
-        const url = `${process.env.REACT_APP_BACKEND_URL}/api/users/userCarbons/${currentUser._id}`;
+        const url = `${process.env.REACT_APP_BACKEND_URL}/api/users/userCarbons/${user._id}`;
         const activities = await axios.get(url);
         console.log("-------------------------------");
         // Assuming activities.data.routes is your array of objects
@@ -66,7 +66,7 @@ export default function Rightbar({ user, pageType, emissionsData }) {
       } catch(err){}
     };
     getActivities();
-  }, [currentUser]);
+  }, [user]);
 
   const handleClick = async () => {
     try {
