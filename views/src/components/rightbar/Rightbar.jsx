@@ -28,7 +28,7 @@ export default function Rightbar({ user, pageType, emissionsData }) {
     setShowEditProfile(!showEditProfile);
   };
 
-  // Define a state for form inputs
+// Define a state for form inputs and image previews
 const [formValues, setFormValues] = useState({
   email: '',
   city: '',
@@ -36,6 +36,12 @@ const [formValues, setFormValues] = useState({
   desc: '',
   profilePicture: '',
   coverPicture: ''
+});
+
+// New state for image preview URLs
+const [imagePreviews, setImagePreviews] = useState({
+  profileImage: '',
+  coverImage: ''
 });
 
 // When the component mounts or the user prop changes, update the form state
@@ -61,6 +67,17 @@ const handleInputChange = (e) => {
       ...prevState,
       [name]: file
     }));
+
+    // Update image preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      // Use the FileReader API to read the file and update the preview state
+      setImagePreviews((prevPreviews) => ({
+        ...prevPreviews,
+        [`${name}Preview`]: reader.result
+      }));
+    };
+    reader.readAsDataURL(file);
   } else {
     // Handle other inputs
     const value = e.target.value;
@@ -70,6 +87,7 @@ const handleInputChange = (e) => {
     }));
   }
 };
+
 
   useEffect(() => {
     const checkUserGoal = async () => {
@@ -146,7 +164,7 @@ const handleInputChange = (e) => {
         <div className="birthdayContainer">
           <img className="goalImg" src="assets/celebration.png" alt="" />
           <span className="goalText">
-            <b>Pola Foster</b> and <b>3 other friends</b> have completed their goals for the month!
+            <b>3 friends</b> have completed their goals for the month!
           </span>
         </div>
         <img className="rightbarAd" src="assets/ad1.png" alt="" />
@@ -196,6 +214,10 @@ const handleFormSubmit = async (e) => {
   }
 };
 
+const triggerFileInput = (fileInputId) => {
+  document.getElementById(fileInputId).click();
+};
+
   const ProfileRightbar = () => {
 
     return (
@@ -221,29 +243,38 @@ const handleFormSubmit = async (e) => {
               <div className="form-body">
                 <div className="form-row">
                   <div className="photo-section">
-
                   <label htmlFor="profileImage">Profile Photo:</label>
-                  <img 
-                    src={user.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.png"} 
-                    alt="Profile" 
-                    className="profile-preview"
-                  />
-                  <input 
-                    type="file" 
-                    name="profileImage" 
-                    onChange={handleInputChange}
-                  />
-                  <label htmlFor="coverImage">Cover Photo:</label>
-                  <img 
-                    src={user.coverPicture ? PF + user.coverPicture : PF + "person/noCover.png"} 
-                    alt="Cover" 
-                    className="cover-preview"
-                  />
-                  <input 
-                    type="file" 
-                    name="coverImage" 
-                    onChange={handleInputChange}
-                  />
+                    <img 
+                      src={imagePreviews.profileImagePreview || (user.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.png")} 
+                      alt="Profile" 
+                      className="profile-preview" 
+                    />
+                    <input 
+                      id="profileImageInput" 
+                      type="file" 
+                      name="profileImage" 
+                      onChange={handleInputChange} 
+                    />
+                    {/* Custom file upload button */}
+                    <label 
+                      className="custom-file-upload" 
+                      onClick={() => document.getElementById('profileImageInput').click()}
+                    >
+                      Choose File
+                    </label>
+
+                    <label htmlFor="coverImage">Cover Photo:</label>
+                    <img 
+                      src={imagePreviews.coverImagePreview || (user.coverPicture ? PF + user.coverPicture : PF + "person/noCover.png")} 
+                      alt="Cover" 
+                      className="cover-preview" 
+                    />
+                    {/* Hidden file input */}
+                    <input id="coverImageInput" type="file" name="coverImage" onChange={handleInputChange} />
+                    {/* Custom file upload button */}
+                    <label className="custom-file-upload" onClick={() => triggerFileInput('coverImageInput')}>
+                      Choose File
+                    </label>
                   </div>
                   <div className="info-section">
                   
@@ -347,6 +378,8 @@ const handleFormSubmit = async (e) => {
       </>
     );
   };
+
+
 
 
 
@@ -482,9 +515,110 @@ const handleFormSubmit = async (e) => {
   };
   
   
+  const LeaderboardRightbar = () => {
+    const [usersGoals, setUsersGoals] = useState([]);
+    const { user: currentUser } = useContext(AuthContext);
+  
+    useEffect(() => {
+      const fetchUsersGoalsAndEmissions = async () => {
+        const combinedUrl = `${process.env.REACT_APP_BACKEND_URL}/api/users/allUsersGoalsAndEmissions`;
+  
+        try {
+          const response = await axios.get(combinedUrl);
+          const combinedData = response.data;
+  
+          // Sort users based on progress (descending order)
+          const sortedUsers = combinedData.sort((a, b) => {
+            const progressA = a.goal > 0 ? (a.totalCo2E / a.goal) * 100 : 0;
+            const progressB = b.goal > 0 ? (b.totalCo2E / b.goal) * 100 : 0;
+            return progressB - progressA;
+          });
+  
+          setUsersGoals(sortedUsers);
+        } catch (error) {
+          console.error('Error fetching combined users goals and emissions:', error);
+        }
+      };
+  
+      if (currentUser && currentUser._id) {
+        fetchUsersGoalsAndEmissions();
+      }
+    }, [currentUser]);
+  
+    const calculateProgress = (goal, emissions) => {
+      const progress = goal > 0 ? (emissions / goal) * 100 : 0;
+      return progress;
+    };
+  
+    const calculateChallengesCompleted = (progress) => {
+      // Calculate the number of challenges completed based on every 10% progress
+      const challengesCompleted = Math.floor(progress / 10);
+      return challengesCompleted;
+    };
+  
+    return (
+      <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+        <Text fontWeight="bold" fontSize="2xl" alignSelf="center" p={4}>
+          Challenges Completed
+        </Text>
+        {usersGoals.map((user, index) => {
+          const progress = calculateProgress(user.goal, user.totalCo2E);
+          const challengesCompleted = calculateChallengesCompleted(progress);
+  
+          return (
+            <HStack key={index} p={4} justify="space-between" align="center">
+              <img
+                src={user.profilePicture ? PF + user.profilePicture : PF + 'person/noAvatar.png'}
+                alt=""
+                className="rightbarFollowingImg"
+              />
+              <VStack align="start" spacing={1} width="100%">
+                <Text fontWeight="bold">{user.username}</Text>
+                <Text fontSize="sm">{user.city}</Text>
+                <Text fontWeight="semibold">
+                  Challenges Completed: {challengesCompleted}
+                </Text>
+              </VStack>
+            </HStack>
+          );
+        })}
+      </VStack>
+    );
+  };
   
   
 
+  const GreenRightbar = () => {
+    const [funFacts, setFunFacts] = useState([
+      "Did you know that trees absorb carbon dioxide and release oxygen during photosynthesis?",
+      "One tree can absorb about 48 pounds of carbon dioxide per year.",
+      "The fashion industry contributes to carbon emissions; consider sustainable clothing options!",
+      // Add more fun facts as needed
+    ]);
+  
+    const [randomFact, setRandomFact] = useState("");
+  
+    useEffect(() => {
+      // Generate a random index to select a random fun fact
+      const randomIndex = Math.floor(Math.random() * funFacts.length);
+      setRandomFact(funFacts[randomIndex]);
+    }, [funFacts]);
+  
+    return (
+      <div className="rightbarContainer">
+        <div className="rightbarContent">
+          <h4 className="rightbarTitle">Did you know?</h4>
+          <p className="rightbarFunFact">{randomFact}</p>
+        </div>
+        <ul className="rightbarFriendList">
+          {/* Render online friends (assuming 'Online' component is defined) */}
+          {friends.map((u) => (
+            <Online key={u.id} user={u} />
+          ))}
+        </ul>
+      </div>
+    );
+  };
 
   
 
@@ -509,6 +643,11 @@ const handleFormSubmit = async (e) => {
       return <GoalsRightbar />;
     } else if (user) {
       return <ProfileRightbar />;
+    } else if (pageType=== "leaderboard"){
+      return <LeaderboardRightbar />;
+    } else if (pageType === "green") {
+      console.log("here")
+      return <GreenRightbar />;
     } else {
       return <HomeRightbar />;
     }

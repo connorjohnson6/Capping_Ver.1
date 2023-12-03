@@ -304,3 +304,28 @@
   display: block;
   margin-bottom: 20px;
 }
+
+/* Hide the default file input */
+.photo-section input[type="file"]{
+  display: none;
+} 
+
+
+/* Style the custom file upload button */
+.custom-file-upload {
+  display: inline-block;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #008001; /* Green background */
+  color: white;
+  border-radius: 4px;
+  font-size: 16px;
+  text-align: center;
+  margin: 10px 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+}
+
+.custom-file-upload:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
