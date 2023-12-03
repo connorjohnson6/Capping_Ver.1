@@ -1,5 +1,5 @@
 import "./share.css";
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 
@@ -9,6 +9,12 @@ export default function Share() {
     const desc = useRef();
     const [file, setFile] = useState(null);
   
+    
+    useEffect(() => {
+        console.log('This is a look for the user:', user);
+      }, [user]);
+
+
     const submitHandler = async (e) => {
       e.preventDefault();
       const newPost = {
@@ -41,13 +47,13 @@ export default function Share() {
                     className="shareProfileImg"
                     src={
                     user.profilePicture
-                        ? PF + user.profilePicture
+                        ? PF + `/${user.profilePicture}`
                         : PF + "person/noAvatar.png"
                     }
                     alt=""
                 />
                 <input
-                    placeholder={"What's in your mind " + user.username + "?"}
+                    placeholder={"What's on your mind " + user.username + "?"}
                     className="shareInput"
                     ref={desc}
                 />

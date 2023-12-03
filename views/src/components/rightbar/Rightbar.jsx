@@ -1,6 +1,6 @@
 import "./rightbar.css";
 import Online from "../online/Online";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -18,7 +18,58 @@ export default function Rightbar({ user, pageType, emissionsData }) {
   const [followed, setFollowed] = useState(
     currentUser && currentUser.followings ? currentUser.followings.includes(user?.id) : false
   );
+  const [showEditProfile, setShowEditProfile] = useState(false);
 
+
+
+
+    // Toggle the visibility of the Profile Form
+  const toggleEditProfile = () => {
+    setShowEditProfile(!showEditProfile);
+  };
+
+  // Define a state for form inputs
+const [formValues, setFormValues] = useState({
+  email: '',
+  city: '',
+  from: '',
+  desc: '',
+  profilePicture: '',
+  coverPicture: ''
+});
+
+// When the component mounts or the user prop changes, update the form state
+useEffect(() => {
+  if (user) {
+    setFormValues({
+      email: user.email || '',
+      city: user.city || '',
+      from: user.from || '',
+      desc: user.desc || '',
+      profilePicture: user.profilePicture || '',
+      coverPicture: user.coverPicture || '',
+    });
+  }
+}, [user]);
+
+const handleInputChange = (e) => {
+  const { name, type } = e.target;
+  if (type === "file") {
+    // Handle file inputs by storing the file object
+    const file = e.target.files[0];
+    setFormValues((prevState) => ({
+      ...prevState,
+      [name]: file
+    }));
+  } else {
+    // Handle other inputs
+    const value = e.target.value;
+    setFormValues((prevState) => ({
+      ...prevState,
+      [name]: value
+    }));
+  }
+};
 
   useEffect(() => {
     const checkUserGoal = async () => {
@@ -86,6 +137,9 @@ export default function Rightbar({ user, pageType, emissionsData }) {
     }
   };
 
+
+  
+
   const HomeRightbar = () => {
     return (
       <>
@@ -106,6 +160,42 @@ export default function Rightbar({ user, pageType, emissionsData }) {
     );
   };
 
+
+// Handle form submission
+const handleFormSubmit = async (e) => {
+  e.preventDefault();
+  const formData = new FormData();
+  Object.keys(formValues).forEach(key => {
+    formData.append(key, formValues[key]);
+  });
+  try {
+    const response = await axios.put(`${process.env.REACT_APP_BACKEND_URL}/api/users/updateInfo/${currentUser._id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });      
+    console.log(response.data);
+    toast({
+      title: 'Profile Updated',
+      description: 'Your profile information has been successfully updated.',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+    // Close the form modal
+    setShowEditProfile(false);
+    
+    // Dispatch the updated user data to the AuthContext
+    dispatch({
+      type: 'UPDATE_USER',
+      payload: response.data.user,
+    });
+    
+  } catch (error) {
+    console.error('Error updating profile:', error);
+  }
+};
+
   const ProfileRightbar = () => {
 
     return (
@@ -117,6 +207,93 @@ export default function Rightbar({ user, pageType, emissionsData }) {
             {followed ? <span className="material-symbols-outlined">person_remove</span> : <span className="material-symbols-outlined">person_add</span>}
           </button>
         )}
+
+      {/* Compare the currentUser's ID with the user's ID to conditionally render the edit button */}
+      {user._id === currentUser._id && (
+        <button className="editProfileButton" onClick={toggleEditProfile}>Edit Profile</button>
+      )}
+
+        {showEditProfile && (
+          <div className="profile-form-modal">
+            <div className="profile-form-container">
+            <form className="profile-form" onSubmit={handleFormSubmit} enctype="multipart/form-data">
+              <div className="form-header">Edit your Profile</div>
+              <div className="form-body">
+                <div className="form-row">
+                  <div className="photo-section">
+
+                  <label htmlFor="profileImage">Profile Photo:</label>
+                  <img 
+                    src={user.profilePicture ? PF + user.profilePicture : PF + "person/noAvatar.png"} 
+                    alt="Profile" 
+                    className="profile-preview"
+                  />
+                  <input 
+                    type="file" 
+                    name="profileImage" 
+                    onChange={handleInputChange}
+                  />
+                  <label htmlFor="coverImage">Cover Photo:</label>
+                  <img 
+                    src={user.coverPicture ? PF + user.coverPicture : PF + "person/noCover.png"} 
+                    alt="Cover" 
+                    className="cover-preview"
+                  />
+                  <input 
+                    type="file" 
+                    name="coverImage" 
+                    onChange={handleInputChange}
+                  />
+                  </div>
+                  <div className="info-section">
+                  
+                    <label htmlFor="email">Email:</label>
+                    <input
+                      key={`email-input-${user?._id}`}
+                      type="email"
+                      name="email"
+                      value={formValues.email}
+                      onChange={handleInputChange}
+                    />
+
+                    <label htmlFor="city">City:</label>
+                    <input
+                      key={`city-input-${user?._id}`}
+                      type="text"
+                      name="city"
+                      value={formValues.city}
+                      onChange={handleInputChange}
+                    />
+
+                    <label htmlFor="from">From:</label>
+                    <input
+                      key={`from-input-${user?._id}`}
+                      type="text"
+                      name="from"
+                      value={formValues.from}
+                      onChange={handleInputChange}
+                    />
+
+                    <label htmlFor="bio">Bio:</label>
+                    <input
+                      key={`bio-input-${user?._id}`}
+                      type="text"
+                      name="desc"
+                      value={formValues.desc}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="form-footer">
+                <button className="closeButton" onClick={toggleEditProfile}>Close</button>
+                <button type="submit" className="submit-btn" onClick={handleFormSubmit}>Save Changes</button>
+              </div>
+            </form>
+            </div>
+          </div>
+        )}
+
         <h4 className="rightbarTitle">User information</h4>
         <div className="rightbarInfo">
           <div className="rightbarInfoItem">

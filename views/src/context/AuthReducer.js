@@ -53,7 +53,13 @@
           ),
         },
       };
-    default:
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        user: action.payload, // the payload contains the updated user data
+      };
+    
+      default:
       return state;
   }
 };

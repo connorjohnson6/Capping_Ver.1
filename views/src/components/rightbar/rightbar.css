@@ -120,3 +120,184 @@
   border-radius: 8px;
   transition: width 0.4s ease-in-out;
 }
+
+
+.profile-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.form-header {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.form-body {
+  display: flex;
+  justify-content: space-between;
+}
+
+.photo-section {
+  flex: 1;
+  text-align: center;
+}
+
+.photo-section img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.change-photo-btn {
+  background-color: #0066cc;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.info-section {
+  flex: 2;
+  padding-left: 20px;
+}
+
+.info-section label {
+  display: block;
+  margin-top: 10px;
+}
+
+.info-section input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+
+.submit-btn {
+  background-color: #008001;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.profile-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* High z-index to be on top */
+}
+
+.profile-form-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  width: 50%; /* Or any other width */
+  z-index: 1001; /* Higher than the overlay */
+}
+
+.editProfileButton {
+  background-color: #008001; /* Green background */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Adds a shadow effect */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.editProfileButton:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+}
+
+.closeButton {
+  background-color: #008001; /* Green background */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Adds a shadow effect */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.closeButton:hover {
+  background-color: #45a049; /* Slightly darker green on hover */
+}
+
+.profile-preview {
+  width: 100px; /* adjust as needed */
+  height: 100px; /* adjust as needed */
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.cover-preview {
+  width: 100%; /* make it stretch across the box */
+  height: auto; /* maintain aspect ratio */
+  object-fit: cover; /* cover the area without stretching the image */
+  border-radius: 0; /* ensure it's a rectangle */
+  margin-bottom: 10px;
+}
+
+/* Additional styles to align the labels above the images */
+.photo-section label {
+  display: block;
+  margin-top: 20px;
+}
+
+.photo-section img.profile-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.photo-section img.cover-preview {
+  width: calc(100% - 20px); /* Subtract padding if needed */
+  height: auto;
+  border-radius: 0;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+/* Ensure the file input buttons are below the images */
+.photo-section input[type="file"] {
+  display: block;
+  margin-bottom: 20px;
+}

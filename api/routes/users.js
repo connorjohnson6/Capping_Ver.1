@@ -14,6 +14,24 @@ const Goal = require('../models/goal-model');
 const Carbon = require('../models/carbon-model'); 
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
+const multer = require('multer');
+
+
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, 'public/images/profilePictures'); //  upload destination directory
+  },
+  filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const fileExtension = file.originalname.split('.').pop(); // Get file extension from original file name
+      cb(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExtension);
+  }
+});
+
+const upload = multer({ storage: storage });
+
 
 //update user
 router.put("/:id", async (req, res) => {
@@ -176,9 +194,6 @@ router.get('/userCarbons/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
     const emissionsData = await Carbon.find({ userId });
-    
-    console.log("emissionsData:");
-    console.log(JSON.stringify(emissionsData, null, 2)); // Using JSON.stringify for better visualization
 
     if (!emissionsData || emissionsData.length === 0) {
       return res.status(404).json({ message: 'Carbon data not found for the user.' });
@@ -186,9 +201,6 @@ router.get('/userCarbons/:userId', async (req, res) => {
 
     // Assuming each document has a `routes` property
     const userRoutes = emissionsData[0].routes.map(route => route.co2E);
-
-    console.log("now routes:");
-    console.log(JSON.stringify(userRoutes, null, 2)); // Using JSON.stringify for better visualization
 
     res.json({
       routes: userRoutes
@@ -231,6 +243,45 @@ router.get('/userGoalAndEmissions/:userId', async (req, res) => {
       res.status(500).json({ error: 'Error updating user progress' });
     }
   });
+
+  router.put('/updateInfo/:userId', upload.fields([{ name: 'profileImage', maxCount: 1 }, { name: 'coverImage', maxCount: 1 }]), async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+  
+      // Update user data from body
+      user.email = req.body.email || user.email;
+      user.city = req.body.city || user.city;
+      user.from = req.body.from || user.from;
+      user.desc = req.body.desc || user.desc;
+  
+      // Process profile image if provided
+      if (req.files['profileImage']) {
+        const profileImagePath = req.files['profileImage'][0].path;
+        // Remove 'public/' from the path before saving to the database
+        const dbProfileImagePath = profileImagePath.replace('public/images/', '');
+        user.profilePicture = dbProfileImagePath;
+      }
+  
+      // Process cover image if provided
+      if (req.files['coverImage']) {
+        const coverImagePath = req.files['coverImage'][0].path;
+        // Remove 'public/' from the path before saving to the database
+        const dbCoverImagePath = coverImagePath.replace('public/images/', '');
+        user.coverPicture = dbCoverImagePath;
+      }
+  
+      await user.save();
+      res.send({ message: 'User updated successfully', user });
+    } catch (error) {
+      res.status(500).send('Server error');
+    }
+
+  });
+  
 
 
 module.exports = router;
