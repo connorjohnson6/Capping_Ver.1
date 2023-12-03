@@ -207,6 +207,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-y: auto; /* Enable vertical scrolling */
   z-index: 1000; /* High z-index to be on top */
 }
 
@@ -215,6 +216,8 @@
   padding: 20px;
   border-radius: 5px;
   width: 50%; /* Or any other width */
+  max-height: 90vh; /* Set maximum height to 90% of the viewport height */
+  overflow-y: auto; /* Enable vertical scrolling if content overflows */
   z-index: 1001; /* Higher than the overlay */
 }
 

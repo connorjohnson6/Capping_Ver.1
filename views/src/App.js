@@ -17,6 +17,9 @@
  import Register from "./pages/register/Register";
  import Calculator from "./pages/calculator/Calculator";
  import Goals from "./pages/goals/Goals";
+ import Leaderboard from "./pages/leaderboard/Leaderboard";
+ import Green from "./pages/green/Green";
+
  import {
    BrowserRouter as Router,
    Route,
@@ -39,6 +42,8 @@
          <Route path="/profile/:username" element={<Profile />} />
          <Route path="/calculator/:username" element={<Calculator />} />
          <Route path="/goals/:username" element={<Goals />} />
+         <Route path="/leaderboard/:username" element={<Leaderboard />} />
+         <Route path="/green/:username" element={<Green />} />
        </Routes>
      </Router>
    );
