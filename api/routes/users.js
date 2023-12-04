@@ -12,9 +12,42 @@
 const User = require('../models/user-model');
 const Goal = require('../models/goal-model'); 
 const Carbon = require('../models/carbon-model'); 
+const EventModel = require('../models/event-model'); 
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const multer = require('multer');
+const nodemailer = require('nodemailer');
+
+// Configure  SMTP transporter
+const transporter = nodemailer.createTransport({
+  service: 'Outlook365', // Outlook365 service identifier
+  auth: {
+    user: '', // Replace with your Outlook email
+    pass: '' // Replace with your Outlook password
+  }
+});
+
+// Endpoint to send an email
+router.post('/send-email', async (req, res) => {
+  const { userEmail, eventDetails } = req.body;
+
+  const mailOptions = {
+    from: '', // Your Outlook email
+    to: userEmail,
+    subject: `Confirmation for ${eventDetails.title}`,
+    text: `Hello,\n\nYou have successfully joined the event: ${eventDetails.title}.\nEvent Details:\n- Type: ${eventDetails.type}\n- Date: ${eventDetails.date}\n- Group: ${eventDetails.group}\n\nThank you!`
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.status(500).send('Error sending email');
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.status(200).send('Email sent');
+    }
+  });
+});
 
 
 
@@ -281,7 +314,47 @@ router.get('/userGoalAndEmissions/:userId', async (req, res) => {
     }
 
   });
-  
 
+  // POST route to join an event
+router.post('/join-event/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const eventInfo = req.body; // Assuming event information is sent in the body of the request
+
+    // Find the user by ID and add the event to their events array
+    const userEvent = await EventModel.findOneAndUpdate(
+      { userId: userId },
+      { $push: { events: eventInfo } },
+      { new: true, upsert: true } // Upsert will create a new document if one doesn't exist
+    );
+
+    // Send back a success response
+    res.status(200).json(userEvent);
+  } catch (error) {
+    console.error('Error joining event:', error);
+    res.status(500).json({ message: 'Error joining event' });
+  }
+});
+  
+// GET route to retrieve the events a user has joined
+router.get('/joined-event/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Find the user's events using the userId
+    const userEvents = await EventModel.findOne({ userId: userId });
+    
+    if (userEvents) {
+      res.status(200).json(userEvents.events); // Send the array of events
+    } else {
+      res.status(404).json({ message: 'No events found for this user.' });
+    }
+  } catch (error) {
+    console.error('Error fetching joined events:', error);
+    res.status(500).json({ message: 'Error fetching events' });
+  }
+});
+
+module.exports = router;
 
 module.exports = router;

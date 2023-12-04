@@ -1,0 +1,10 @@
+.eventContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch; /* This will make sure all children of homeContainer fill the entire height */
+    gap: 20px; /* Adds space between the child components */
+    margin-top: 20px; /* Adjust this value as needed for spacing from the Topbar */
+    padding: 0 20px; /* Adjust this value as needed for overall inner spacing */
+  }
+  
+  

@@ -30,7 +30,7 @@ app.use(cors());
 // Connect to MongoDB
 mongoose.connect(
   keys.mongodb.dbURI,
-  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
+  { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false },
   () => {
       console.log("Connected to MongoDB");
   }

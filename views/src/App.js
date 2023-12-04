@@ -19,6 +19,8 @@
  import Goals from "./pages/goals/Goals";
  import Leaderboard from "./pages/leaderboard/Leaderboard";
  import Green from "./pages/green/Green";
+ import Events from "./pages/events/Events";
+
 
  import {
    BrowserRouter as Router,
@@ -44,6 +46,8 @@
          <Route path="/goals/:username" element={<Goals />} />
          <Route path="/leaderboard/:username" element={<Leaderboard />} />
          <Route path="/green/:username" element={<Green />} />
+         <Route path="/events/:username" element={<Events />} />
+
        </Routes>
      </Router>
    );

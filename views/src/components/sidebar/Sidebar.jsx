@@ -52,10 +52,13 @@ export default function Sidebar(){
                             <span className="sidebarListItemText">Carbon Calculator</span>
                         </li>
                     </Link>
-                    <li className="sidebarListItem">
-                        <span className="material-symbols-outlined" id="sidebarIcon">event</span>
-                        <span className="sidebarListItemText">Events</span>
-                    </li>
+                    <Link to={`/events/${user.username}`}>
+                        <li className="sidebarListItem">
+                            <span className="material-symbols-outlined" id="sidebarIcon">event</span>
+                            <span className="sidebarListItemText">Events</span>
+                        </li>
+                    </Link>
+
                     <Link to={`/goals/${user.username}`}>
                         <li className="sidebarListItem">
                             <span className="material-symbols-outlined" id="sidebarIcon">task_alt</span>

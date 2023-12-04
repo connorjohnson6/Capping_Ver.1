@@ -1,6 +1,6 @@
 import "./rightbar.css";
 import Online from "../online/Online";
-import { useContext, useEffect, useState, useCallback } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -620,7 +620,7 @@ const triggerFileInput = (fileInputId) => {
     );
   };
 
-  
+
 
   // Determine which Rightbar to display
   // const renderRightBar = () => {
@@ -646,7 +646,6 @@ const triggerFileInput = (fileInputId) => {
     } else if (pageType=== "leaderboard"){
       return <LeaderboardRightbar />;
     } else if (pageType === "green") {
-      console.log("here")
       return <GreenRightbar />;
     } else {
       return <HomeRightbar />;
