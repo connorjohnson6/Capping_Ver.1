@@ -6,7 +6,7 @@
  * These actions are used with a reducer to update the application's state.
  *
  * @fileoverview Action creators for authentication and user interactions in a React application.
- * @author [Your Name]
+ * @author [Connor Johnson]
  */
 
 /**

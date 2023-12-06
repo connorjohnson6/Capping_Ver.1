@@ -51,7 +51,7 @@ router.post('/send-email', async (req, res) => {
 
 
 
-
+// Configure multer for file upload
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
       cb(null, 'public/images/profilePictures'); //  upload destination directory
