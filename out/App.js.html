@@ -45,6 +45,10 @@
  import Register from "./pages/register/Register";
  import Calculator from "./pages/calculator/Calculator";
  import Goals from "./pages/goals/Goals";
+ import Leaderboard from "./pages/leaderboard/Leaderboard";
+ import Green from "./pages/green/Green";
+ import Events from "./pages/events/Events";
+
  import {
    BrowserRouter as Router,
    Route,
@@ -67,6 +71,9 @@
          &lt;Route path="/profile/:username" element={&lt;Profile />} />
          &lt;Route path="/calculator/:username" element={&lt;Calculator />} />
          &lt;Route path="/goals/:username" element={&lt;Goals />} />
+         &lt;Route path="/leaderboard/:username" element={&lt;Leaderboard />} />
+         &lt;Route path="/green/:username" element={&lt;Green />} />
+         &lt;Route path="/events/:username" element={&lt;Events />} />
        &lt;/Routes>
      &lt;/Router>
    );
