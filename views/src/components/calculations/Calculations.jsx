@@ -12,53 +12,51 @@ import { getDrivingData, getFlightData, getTrainData } from '../../context/clima
 
 
 
-const center = { lat: 41.7231, lng: -73.9345 };
+const center = { lat: 41.7231, lng: -73.9345 }; // Default map center coordinates
 
 function Calculations({ addEmissionsData }) {
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: ['places'],
-  })
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY, // Google Maps API key
+    libraries: ['places'], // Loading additional libraries (places for Autocomplete)
+  });
 
+  // variables for map, directions, distance, duration, and transport mode
   const [map, setMap] = useState(null);
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState('');
   const [duration, setDuration] = useState('');
   const [transportMode, setTransportMode] = useState('driving');
-  
 
-
+  // Refs for origin and destination inputs
   const originRef = useRef();
   const destinationRef = useRef();
 
+  // Handling loading state
   if (!isLoaded) return <div>Loading...</div>;
 
+  // Function to calculate route
   async function calculateRoute() {
     if (originRef.current.value === '' || destinationRef.current.value === '') {
-      return;
+      return; // Exit if fields are empty
     }
 
-    // eslint-disable-next-line no-undef
     let travelMode;
     switch (transportMode) {
       case 'driving':
-        // eslint-disable-next-line no-undef
         travelMode = google.maps.TravelMode.DRIVING;
         break;
       case 'plane':
-        // Handle planes differently as Google Maps doesn't support flight paths
-        
-        getFlightData("EWR", "DEN", "economy"); // Placeholder, adjust as needed
+        // Flight handling (since Google Maps doesn't support flight paths)
+        getFlightData("EWR", "DEN", "economy");
         return;
       case 'train':
-        // eslint-disable-next-line no-undef
         travelMode = google.maps.TravelMode.TRANSIT;
         break;
       default:
-        // eslint-disable-next-line no-undef
         travelMode = google.maps.TravelMode.DRIVING;
     }
 
+    // Requesting directions
     const directionsService = new google.maps.DirectionsService();
     const results = await directionsService.route({
       origin: originRef.current.value,
@@ -66,35 +64,34 @@ function Calculations({ addEmissionsData }) {
       travelMode: travelMode,
     });
 
+    // Handling the response
     if (results.status === "OK") {
       setDirectionsResponse(results);
       setDistance(results.routes[0].legs[0].distance.text);
       setDuration(results.routes[0].legs[0].duration.text);
 
+      // Additional handling for driving and train modes
       if (transportMode === 'driving') {
         try {
           const drivingData = await getDrivingData(originRef.current.value, destinationRef.current.value, "petrol", "medium");
-          console.log("Received driving data:", drivingData);
           addEmissionsData({ ...drivingData, method: 'Driving' });
         } catch (error) {
           console.error("Error fetching driving data:", error);
         }
-      }
-      else if (transportMode === 'train') {
+      } else if (transportMode === 'train') {
         try {
           const trainData = await getTrainData(originRef.current.value, destinationRef.current.value);
-          console.log("Received train data:", trainData);
           addEmissionsData({ ...trainData, method: 'Train' });
         } catch (error) {
           console.error("Error fetching train data:", error);
         }
       }
-      
     } else {
       console.error('Directions request failed due to ', results.status);
     }
   }
 
+  // Function to clear the route
   function clearRoute() {
     setDirectionsResponse(null);
     setDistance('');
@@ -102,6 +99,8 @@ function Calculations({ addEmissionsData }) {
     originRef.current.value = '';
     destinationRef.current.value = '';
   }
+
+
   return (
     <Flex direction="column" alignItems="center" m={4}>
     <Select onChange={(e) => setTransportMode(e.target.value)} defaultValue="driving">

@@ -5,12 +5,16 @@ import { AuthContext } from "../../context/AuthContext";
 
 
 export default function Sidebar(){
+    // Using useContext to access the user from AuthContext
     const { user } = useContext(AuthContext);
+
     return (
         <div className="sidebar">
             <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" /> 
             <div className="sidebarWrapper">
                 <ul className="sidebarList">
+                    {/* List of sidebar items with Links for navigation */}
+
                     <Link to={`/`}>
                         <li className="sidebarListItem">
                             <span className="material-symbols-outlined" id="sidebarIcon">rss_feed</span>

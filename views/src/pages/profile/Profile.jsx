@@ -8,18 +8,19 @@ import axios from "axios";
 import { useParams } from "react-router";
 
 export default function Profile() {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({}); // useState hook to handle user state
+  const username = useParams().username; // useParams hook to get the 'username' parameter from the URL
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;  // Environment variable for public folder path
 
-  const username = useParams().username;
-
+  // useEffect hook to fetch user data when 'username' changes
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(`/users?username=${username}`);
-      setUser(res.data);
+      const res = await axios.get(`/users?username=${username}`); // Axios get request to fetch user data
+      setUser(res.data); // Updating user state with fetched data
     };
     fetchUser();
-  }, [username]);
+  }, [username]); // Dependency array with 'username' to re-run effect when username changes
+
 
   return (
     <>

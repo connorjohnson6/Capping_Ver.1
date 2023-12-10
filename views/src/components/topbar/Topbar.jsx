@@ -6,27 +6,35 @@ import "./topbar.css";
 
 
 export default function Topbar() {
-    const { user } = useContext(AuthContext);
+    // useContext to access the user from AuthContext
+    const { user } = useContext(AuthContext); 
+
+    // Environment variable for public folder path
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-    const [searchTerm, setSearchTerm] = useState("");
-    const [suggestions, setSuggestions] = useState([]);
+    // useState hooks for managing search term and suggestions
+    const [searchTerm, setSearchTerm] = useState(""); // State for the search term
+    const [suggestions, setSuggestions] = useState([]); // State for storing search suggestions
 
-    useEffect(() => {
+    // hook to fetch users as search suggestions
+    useEffect(() => {  
         if (searchTerm) {
             const loadUsers = async () => {
                 try {
+                    // Axios GET request to fetch users based on search term
+                    //check env folder for route information
                     const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/users/search?name=${searchTerm}`);
-                    setSuggestions(response.data);
+                    setSuggestions(response.data); // Updating suggestions state
                 } catch (error) {
                     console.error("Error fetching users:", error);
                 }
             };
             loadUsers();
         } else {
-            setSuggestions([]);
+            setSuggestions([]); // Clearing suggestions if search term is empty
         }
-    }, [searchTerm]);
+    }, [searchTerm]); // Dependency array to re-run effect when searchTerm changes
+
 
 
     return (
@@ -45,7 +53,7 @@ export default function Topbar() {
                         placeholder="Search for friend, post or video" 
                         className="searchInput"
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={(e) => setSearchTerm(e.target.value)} // Updating searchTerm state on change
                     />
                     {suggestions.length > 0 && (
                         <div className="searchSuggestions">

@@ -4,38 +4,44 @@ import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 
 export default function Share() {
+    // Using useContext to access the user from AuthContext
     const { user } = useContext(AuthContext);
+
+    // Environment variable for public folder path
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+    // hook to create a ref for the description input
     const desc = useRef();
+
+    // hook to manage file state
     const [file, setFile] = useState(null);
-  
-    
+
+    // hook to log user data on component mount or update
     useEffect(() => {
         console.log('This is a look for the user:', user);
-      }, [user]);
+    }, [user]);
 
-
+    // Function to handle form submission
     const submitHandler = async (e) => {
-      e.preventDefault();
-      const newPost = {
-        userId: user._id,
-        desc: desc.current.value,
-      };
-      if (file) {
-        const data = new FormData();
-        const fileName = Date.now() + file.name;
-        data.append("name", fileName);
-        data.append("file", file);
-        newPost.img = fileName;
-        console.log(newPost);
+        e.preventDefault(); // Prevent default form submission behavior
+        const newPost = {
+            userId: user._id,
+            desc: desc.current.value,
+        };
+        if (file) {
+            const data = new FormData();
+            const fileName = Date.now() + file.name;
+            data.append("name", fileName);
+            data.append("file", file);
+            newPost.img = fileName;
+            try {
+                await axios.post("/upload", data); // Post request to upload file
+            } catch (err) {}
+        }
         try {
-          await axios.post("/upload", data);
+            await axios.post("/posts", newPost); // Post request to create a new post
+            window.location.reload(); // Reload the page to update the UI
         } catch (err) {}
-      }
-      try {
-        await axios.post("/posts", newPost);
-        window.location.reload();
-      } catch (err) {}
     };
   
     return (

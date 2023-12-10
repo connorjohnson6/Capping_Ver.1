@@ -86,7 +86,6 @@ const Events = () => {
     // Dummy function to simulate filtering based on selection
     // In a real app, lets replace this with actual filtering logic
     const filterEvents = (event) => {
-      // Your filter logic here...
       return event;
     };
   

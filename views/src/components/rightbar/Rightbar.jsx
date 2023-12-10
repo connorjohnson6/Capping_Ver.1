@@ -202,6 +202,7 @@ const handleFormSubmit = async (e) => {
     });
     // Close the form modal
     setShowEditProfile(false);
+
     
     // Dispatch the updated user data to the AuthContext
     dispatch({
@@ -446,34 +447,38 @@ const triggerFileInput = (fileInputId) => {
 
 
   const GoalsRightbar = () => {
-    const [usersGoals, setUsersGoals] = useState([]);
-    const { user: currentUser } = useContext(AuthContext);
+    const [usersGoals, setUsersGoals] = useState([]); // State to store users goals
+    const { user: currentUser } = useContext(AuthContext); // Accessing current user from AuthContext
     
+    // fetch users' goals and emissions data when currentUser changes
     useEffect(() => {
       const fetchUsersGoalsAndEmissions = async () => {
         const combinedUrl = `${process.env.REACT_APP_BACKEND_URL}/api/users/allUsersGoalsAndEmissions`;
       
         try {
-          const response = await axios.get(combinedUrl);
+          const response = await axios.get(combinedUrl); // Fetching data from API
           const combinedData = response.data;
       
-          setUsersGoals(combinedData);
+          setUsersGoals(combinedData); // Setting the fetched data to state
         } catch (error) {
           console.error('Error fetching combined users goals and emissions:', error);
         }
       };
     
+      // Only fetch data if the current user is valid
       if (currentUser && currentUser._id) {
         fetchUsersGoalsAndEmissions();
       }
     }, [currentUser]);
-    
+
+    // Function to calculate progress of goal completion
     const calculateProgress = (goal, emissions) => {
-      const progress = goal > 0 ? (emissions / goal) * 100 : 0; // Calculates the percentage
-      console.log(`Progress for goal ${goal} and emissions ${emissions}:`, progress);
+      const progress = goal > 0 ? (emissions / goal) * 100 : 0; // Calculating percentage progress
+      console.log(`Progress for goal ${goal} and emissions ${emissions}:`, progress); //debugguing line
       return progress;
     };
-  
+
+    // Placeholder display if no goal is set
     if (!isGoalSet) {
       return <div>Set a goal to see the leaderboard.</div>;
     }
@@ -636,6 +641,8 @@ const triggerFileInput = (fileInputId) => {
   //   }
   // };
 
+  // checks what rightbar to display based off of the declared page type
+  // stated inside of the <Rightbar > partial from pages
   const renderRightBar = () => {
     if (pageType === "calculations") {
       return <CalculationsRightbar emissionsData={emissionsData} />;

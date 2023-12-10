@@ -15,7 +15,8 @@ function Goals() {
       <Topbar />
       <div className="homeContainer">
         <Sidebar />
-        <ChakraProvider>
+        {/* Boostrap react-styling */}
+        <ChakraProvider> 
         <SetGoal />
         </ChakraProvider>
         <Rightbar pageType="goals"/>
