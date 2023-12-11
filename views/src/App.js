@@ -17,6 +17,7 @@
  import Register from "./pages/register/Register";
  import Calculator from "./pages/calculator/Calculator";
  import Goals from "./pages/goals/Goals";
+ import Events from "./pages/events/Events";
  import Leaderboard from "./pages/leaderboard/Leaderboard";
  import Green from "./pages/green/Green";
  import Challenges from "./pages/challenges/Challenges";
@@ -43,6 +44,7 @@
          <Route path="/profile/:username" element={<Profile />} />
          <Route path="/calculator/:username" element={<Calculator />} />
          <Route path="/goals/:username" element={<Goals />} />
+         <Route path="/events/:username" element={<Events />} />
          <Route path="/leaderboard/:username" element={<Leaderboard />} />
          <Route path="/green/:username" element={<Green />} />
          <Route path="/challenges/:username" element={<Challenges />} />
