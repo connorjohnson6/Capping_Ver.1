@@ -12,6 +12,7 @@ const flash = require('express-flash');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
+const challengeRoutes = require('./routes/challenges-routes');
 
 
 
@@ -73,6 +74,7 @@ app.use("/api/posts", postRoutes);
 
 app.use('/users', usersRoutes);
 app.use('/posts', postRoutes);
+app.use('/api/challenges', challengeRoutes);
 
 
 // Navigation
