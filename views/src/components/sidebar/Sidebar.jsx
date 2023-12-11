@@ -46,10 +46,12 @@ export default function Sidebar(){
                             <span className="sidebarListItemText">Tips</span>
                         </li>
                     </Link>
+                    <Link to={`/challenges/${user.username}`}>
                     <li className="sidebarListItem">
                         <span className="material-symbols-outlined" id="sidebarIcon">flag</span>
                         <span className="sidebarListItemText">Challenges</span>
                     </li>
+                    </Link>
                     <Link to={`/calculator/${user.username}`}>
                         <li className="sidebarListItem">
                             <span className="material-symbols-outlined" id="sidebarIcon">co2</span>
