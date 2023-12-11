@@ -1,0 +1,17 @@
+/* Challenges.css */
+.challengesContainer {
+ 
+    padding-right: 70px; 
+    padding-left: 30px;
+  }
+  
+/* Challenges.css */
+
+  
+  /* Adjust the width and margin for the Rightbar component */
+  .Rightbar {
+    width: 300px; /* Adjust the width as needed */
+    margin-left: 16px; /* Add some margin to the left to push it to the right */
+  }
+  
+  /* Challenges.css */
