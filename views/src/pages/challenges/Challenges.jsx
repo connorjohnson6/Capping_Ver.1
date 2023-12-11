@@ -6,6 +6,7 @@ import Rightbar from "../../components/rightbar/Rightbar";
 import originalChallengesData from '../../components/challengeComponents/challengeData';
 import ChallengeService from '../../components/challengeComponents/challengeService'; // Import the new service
 import { ChakraProvider, Box, Text, Button, VStack } from "@chakra-ui/react";
+import './challenges.css'; 
 
 function Challenges() {
   const [activeChallenges, setActiveChallenges] = useState([]);
@@ -38,13 +39,13 @@ function Challenges() {
         <Sidebar />
         <ChakraProvider>
           <Box className="challengesContainer" minW="sm">
-            <Text fontSize="2xl" mb="4">Challenges</Text>
+            <Text fontSize="2xl" mb="4" mt="3" ml="170">Challenges</Text>
             <Box d="flex" mb="4">
               <Box flex="1" textAlign="center" bg="orange.100" p="4" borderRadius="md" mr="2">
                 <Text fontSize="lg" fontWeight="bold">Active</Text>
                 <Text fontSize="xl">{activeChallenges.length}</Text>
               </Box>
-              <Box flex="1" textAlign="center" bg="green.100" p="4" borderRadius="md">
+              <Box flex="1" textAlign="center" bg="green.100" p="4" borderRadius="md" mr="2">
                 <Text fontSize="lg" fontWeight="bold">Completed</Text>
                 <Text fontSize="xl">0</Text>
               </Box>
