@@ -1,5 +1,5 @@
 // Challenges.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Topbar from "../../components/topbar/Topbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Rightbar from "../../components/rightbar/Rightbar";
@@ -10,27 +10,49 @@ import './challenges.css';
 
 function Challenges() {
   const [activeChallenges, setActiveChallenges] = useState([]);
-  const [challengeStatus, setChallengeStatus] = useState(
-    originalChallengesData.availableChallenges.reduce((status, challenge) => {
-      status[challenge.id] = false; // Initially, no challenges are added
+  const [challengeStatus, setChallengeStatus] = useState(() => {
+    // Get the saved challenges from localStorage or default to the initial state
+    const saved = localStorage.getItem('challengeStatus');
+    const initialValue = saved ? JSON.parse(saved) : originalChallengesData.availableChallenges.reduce((status, challenge) => {
+      status[challenge.id] = false;
       return status;
-    }, {})
-  );
+    }, {});
+    return initialValue;
+  });
+
+  // Update localStorage whenever the challengeStatus changes
+  useEffect(() => {
+    localStorage.setItem('challengeStatus', JSON.stringify(challengeStatus));
+  }, [challengeStatus]);
 
   const handleToggleChallenge = (challengeId) => {
-    setChallengeStatus(prevStatus => ({
-      ...prevStatus,
-      [challengeId]: !prevStatus[challengeId] // Toggle the status
-    }));
+    setChallengeStatus(prevStatus => {
+      const newStatus = {
+        ...prevStatus,
+        [challengeId]: !prevStatus[challengeId]
+      };
+      // Update localStorage with the new status
+      localStorage.setItem('challengeStatus', JSON.stringify(newStatus));
+      return newStatus;
+    });
 
     setActiveChallenges(prevActiveChallenges => {
-      if (prevActiveChallenges.includes(challengeId)) {
-        return prevActiveChallenges.filter(id => id !== challengeId); // Remove the challenge
-      } else {
-        return [...prevActiveChallenges, challengeId]; // Add the challenge
-      }
+      const newActiveChallenges = prevActiveChallenges.includes(challengeId) ?
+        prevActiveChallenges.filter(id => id !== challengeId) :
+        [...prevActiveChallenges, challengeId];
+      // Update localStorage with the new active challenges
+      localStorage.setItem('activeChallenges', JSON.stringify(newActiveChallenges));
+      return newActiveChallenges;
     });
   };
+
+  // Restore active challenges from localStorage on component mount
+  useEffect(() => {
+    const savedActiveChallenges = localStorage.getItem('activeChallenges');
+    if (savedActiveChallenges) {
+      setActiveChallenges(JSON.parse(savedActiveChallenges));
+    }
+  }, []);
 
   return (
     <>
