@@ -1,23 +1,9 @@
 # Capping_Ver.1
 
-/-- You do not need to do these instals, I am only keep records --/
+This branch is not listed as a main production branch
 
-npm init -y
-
-npm i express ejs express express-ejs-layouts
-
-npm i -D nodemon
-
-To run the application. start a new terminal and enter: 
-- npm run startDev.
-Will be hosting on port 3000
-
-
-npm install passport@0.5 passport-google-oauth20
-npm install mongoose
-npm install mongodb
-npm install cookie-session
-npm install express-flash express-session
-npm install body-parser
+If you wish to see a production branch please go to:
+1. landing-server
+2. client-server
 
 
