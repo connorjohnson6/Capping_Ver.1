@@ -1,6 +1,5 @@
 # Capping_Ver.1
 
-# Capping_Ver.1
 
 This branch is not listed as a main production branch
 
@@ -12,6 +11,7 @@ If you wish to see a production branch please go to:
 
 
 
+##How to run branch
 
 Here is the page that I am creating for my client side of the our Carbon Emissions page.
 I can see that react would be the way to go for real time updates especially if we are
