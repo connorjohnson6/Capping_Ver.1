@@ -19,6 +19,7 @@
  import Goals from "./pages/goals/Goals";
  import Leaderboard from "./pages/leaderboard/Leaderboard";
  import Green from "./pages/green/Green";
+ import Challenges from "./pages/challenges/Challenges";
 
  import {
    BrowserRouter as Router,
@@ -44,6 +45,7 @@
          <Route path="/goals/:username" element={<Goals />} />
          <Route path="/leaderboard/:username" element={<Leaderboard />} />
          <Route path="/green/:username" element={<Green />} />
+         <Route path="/challenges/:username" element={<Challenges />} />
        </Routes>
      </Router>
    );
