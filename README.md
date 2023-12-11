@@ -54,7 +54,7 @@ Before you begin, make sure you have the following installed:
         * Run npm start to start the MongoDB API.
 2. **Start the React App**
         * Open another terminal in your IDE.
-        * Navigate to the views folder.
+        * Then, change directory to views using cd views.
         * Run npm start to start the React application.
 
 **Important Notes**
