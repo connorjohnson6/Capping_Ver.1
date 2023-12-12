@@ -1,7 +1,7 @@
-// ChallengeService.js
+// Starting file for communicating front end challenge.jsx changes to backend code
 import axios from 'axios';
 
-const baseURL = process.env.REACT_APP_BACKEND_URL; // Make sure this is set in your .env file
+const baseURL = process.env.REACT_APP_BACKEND_URL; 
 
 const fetchActiveChallenges = async (userId) => {
   return await axios.get(`${baseURL}/api/challenges/active/${userId}`);
