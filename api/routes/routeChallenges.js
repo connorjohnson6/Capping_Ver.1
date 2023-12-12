@@ -1,4 +1,4 @@
-// challenges-routes.js
+//For backend compatiblity, this file is responsible for manageing and packaging route requests
 import { challengeSchema } from '../models/challenge-model.js';
 const router = require("express").Router();
 const Challenge = require("../models/challenge-model"); // This would be your model for challenges
