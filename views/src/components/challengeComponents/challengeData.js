@@ -1,3 +1,4 @@
+//Reference data for challenge list, can be expanded.
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
