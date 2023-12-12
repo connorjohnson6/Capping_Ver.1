@@ -1,4 +1,5 @@
-// Challenges.jsx
+/* Main front end file for challenges page. Applies functionality to add/remove challenges. As well as a feature
+to save changes to local storage */
 import React, { useState, useEffect } from 'react';
 import Topbar from "../../components/topbar/Topbar";
 import Sidebar from "../../components/sidebar/Sidebar";
