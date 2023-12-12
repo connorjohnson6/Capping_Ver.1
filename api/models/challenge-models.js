@@ -1,4 +1,4 @@
-// ChallengeModel.js
+// For future MongoDB compatibility, this file applies a framework schema for user-specific active challenge list
 const mongoose = require('mongoose');
 
 const challengeSchema = new mongoose.Schema({
