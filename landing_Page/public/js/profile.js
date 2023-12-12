@@ -1,3 +1,6 @@
+/* Adds functionality to landing profile page. Such as uploading a profile picture. However, profile section was eventually 
+abandoned for a React-based profile instead. There is no back-end functionality attached to these functions. */
+
 function uploadProfilePic() {
     const input = document.getElementById('profilePicInput');
     input.click();
