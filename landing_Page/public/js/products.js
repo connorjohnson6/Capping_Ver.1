@@ -1,3 +1,6 @@
+/* This page adds additional functionality to product page. Such as, hover affect for each product container, 
+a pop up for each product when pressed on, and a hyperlink to purchase each product online*/
+
 let preveiwContainer = document.querySelector('.products-preview');
 let previewBox = preveiwContainer.querySelectorAll('.preview');
 
